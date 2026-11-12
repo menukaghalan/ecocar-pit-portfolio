@@ -21,6 +21,9 @@
   const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SVGNS = 'http://www.w3.org/2000/svg';
   const STAGE_W = 1600, STAGE_H = 900;
+  // v15: ?export=1 renders one slide per 1600 × 900 page for the PDF (no top bar or dock)
+  const EXPORT = new URLSearchParams(location.search).has('export');
+  if (EXPORT) document.documentElement.classList.add('export');
 
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const icon = (n) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
@@ -187,7 +190,7 @@
   // --sw (stage width), --k (how much the 1480 content width grew) and --dx (half the growth).
   const STAGE_W_MAX = 2240, SIDE = 20;
   function fit() {
-    const top = 52, bot = 66; // v12: room for the dock, which now stays visible
+    const top = EXPORT ? 0 : 52, bot = EXPORT ? 0 : 66; // v12: room for the dock, which now stays visible
     const vw = innerWidth, vh = innerHeight;
     const availH = Math.max(200, vh - top - bot);
     scale = Math.min(vw / STAGE_W, availH / STAGE_H);
@@ -312,10 +315,13 @@
         ctx.globalAlpha = 0.5 + depth * 0.5;
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, r * 4, 0, 6.283); ctx.fill();
         ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.55, 0, 6.283); ctx.fill();
-        if (depth > 0.35) {
-          ctx.globalAlpha = Math.min(1, (depth - 0.35) * 2.2) * 0.9;
-          ctx.font = '600 13px Inter, sans-serif'; ctx.fillStyle = '#e2e8f0';
-          ctx.fillText(b.l.short, p.x + r + 8, p.y + 4);
+        // v15: only the V&V body is labelled (it is our story), so no label can sit on the hub
+        if (b.l.id === 8 && depth > 0.2) {
+          ctx.globalAlpha = Math.min(1, (depth - 0.2) * 2.2);
+          ctx.font = '700 17px Inter, sans-serif'; ctx.fillStyle = '#f5d0fe';
+          const lab = 'Integration & V&V · our focus', tw = ctx.measureText(lab).width;
+          // flip the label to the left of the body when it would run off the stage
+          if (p.x + r + 10 + tw > stageW - 24) ctx.fillText(lab, p.x - r - 10 - tw, p.y + 6); else ctx.fillText(lab, p.x + r + 10, p.y + 6);
         }
         ctx.globalAlpha = 1;
       };
@@ -334,9 +340,10 @@
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 64, 0, 6.283); ctx.fill();
       ctx.strokeStyle = 'rgba(165,180,252,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
       ctx.save(); ctx.translate(cx - 30, cy - 34); ctx.scale(2.5, 2.5); ctx.fillStyle = '#fff'; ctx.fill(carPath); ctx.restore();
-      ctx.font = '700 11px Inter, sans-serif'; ctx.fillStyle = '#a5b4fc'; ctx.textAlign = 'center';
-      ctx.fillText('THE OEM', cx, cy + 40); ctx.textAlign = 'left';
       pos.filter((o) => o.p.z >= 0).forEach(drawBody);
+      // the hub label is drawn last, below the circle, so no orbiting body can cover it
+      ctx.globalAlpha = 1; ctx.font = '700 15px Inter, sans-serif'; ctx.fillStyle = '#c7d2fe'; ctx.textAlign = 'center';
+      ctx.fillText('THE AUTOMAKER (OEM)', cx, cy + 92); ctx.textAlign = 'left';
     }
     function loop(t) {
       if (!running) return;
@@ -790,18 +797,18 @@
     const HEAT = { 3: '#dc2626', 2: '#f59e0b', 1: '#16a34a' };
     const CAPC = { once: '#6366f1', mixed: '#14b8a6', recurring: '#f43f5e', spans: '#a855f7' };
     const LENSES = {
-      layers: { legend: () => '<span class="ll-t">Layers</span>One colour per layer, used everywhere in the deck. Click a layer for its deep dive.' },
+      layers: { legend: () => '<span class="ll-t">Layers</span>One colour per layer, used for the value chain throughout. ★ marks where W1 and W2 sit.' },
       competition: {
         tint: (l) => HEAT[l.comp],
-        legend: () => `<span class="ll-t">Competition</span><i style="--k:${HEAT[3]}"></i>Crowded <i style="--k:${HEAT[2]}"></i>Contested <em>Team ratings, to be tested in SME interviews${citeHtml('team')}</em>`,
+        legend: () => `<span class="ll-t">Competition</span>Colours on the car: <i style="--k:${HEAT[3]}"></i>Crowded <i style="--k:${HEAT[2]}"></i>Contested <em>Team ratings; the bars on each row show the same</em>`,
       },
       capture: {
         tint: (l) => CAPC[l.capture],
-        legend: () => `<span class="ll-t">Value capture</span><i style="--k:${CAPC.once}"></i>Once per vehicle <i style="--k:${CAPC.mixed}"></i>Per vehicle + upgrades <i style="--k:${CAPC.recurring}"></i>Every month <em>Team reading</em>`,
+        legend: () => `<span class="ll-t">Value capture</span>Colours on the car: <i style="--k:${CAPC.once}"></i>Once per vehicle <i style="--k:${CAPC.mixed}"></i>Per vehicle + upgrades <i style="--k:${CAPC.recurring}"></i>Every month`,
       },
       pockets: {
         dim: (l) => !l.pocket.star || l.pocket.screened,
-        legend: () => '<span class="ll-t">Open pockets</span><span class="ll-star">★</span>Wedges:&nbsp;<b class="ll-b">W1</b>&nbsp;and&nbsp;<b class="ll-b">W2</b>&nbsp;·&nbsp;✕&nbsp;dropped or screened out',
+        legend: () => '<span class="ll-t">Open pockets</span><span class="ll-star">★</span>Where&nbsp;<b class="ll-b">W1</b>&nbsp;and&nbsp;<b class="ll-b">W2</b>&nbsp;sit&nbsp;·&nbsp;✕&nbsp;dropped',
       },
     };
 
@@ -976,12 +983,15 @@
         labels[id].classList.toggle('dim', dim && !l.pocket.screened);
         rows[id].classList.toggle('dim', dim);
         base[id].classList.toggle('dim', dim); pulse[id].classList.toggle('dim', dim); dots[id].classList.toggle('dim', dim);
-        const em = $('em', labels[id]), t = name === 'pockets' ? (l.pocket.target ? (l.pocket.target === 'lead' ? '★ W1' : '★ W2') : l.pocket.screened ? '✕ OUT' : '') : '';
-        em.textContent = t; em.classList.toggle('on', !!t); em.classList.toggle('scr', !!l.pocket.screened);
+        // v15: the W1 and W2 stars show in every lens; "out" marks only in the Open pockets lens
+        const em = $('em', labels[id]), t = l.pocket.target ? (l.pocket.target === 'lead' ? '★ W1' : '★ W2') : name === 'pockets' && l.pocket.screened ? '✕ OUT' : '';
+        em.textContent = t; em.classList.toggle('on', !!t); em.classList.toggle('scr', !!l.pocket.screened && name === 'pockets');
       });
       legend.classList.remove('in'); void legend.offsetWidth;
       legend.innerHTML = L.legend();
       legend.classList.add('in');
+      // v15: a lens change also pulls the eye to the rows on the right, where the reading is
+      if (built && !boot) { calls.classList.remove('lens-in'); void calls.offsetWidth; calls.classList.add('lens-in'); }
     }
 
     function setWhere(id) {
@@ -1507,7 +1517,8 @@
         raf = requestAnimationFrame(frame);
         if (entered) return;
         entered = true;
-        if (REDUCE) { speedTo = 0; roadA = 1; setBootVisual(false); } else startBoot();
+        // v15: open on the finished drawing; the build is an optional replay (↻ button)
+        if (REDUCE) { speedTo = 0; roadA = 1; setBootVisual(false); } else { startBoot(); finishBoot(); }
       },
       leave() {
         running = false; cancelAnimationFrame(raf);
@@ -1729,8 +1740,9 @@
 
     function build() {
       $('#fcTotal').textContent = CLAIMS.length;
-      $('#fcSub').textContent = `${CLAIMS.length} market claims audited against ${nSrc} sources on ${TEAM.asOf}. ${nVC} verified or corrected; ${nFlag} explicitly flagged as forecast, estimate, survey or hypothesis; of the 43, ${OPEN_ITEMS.length} points still need a manual check against the original source.`;
-      $('#fcSplit').innerHTML = `<span><b>${nVC}</b> verified or corrected</span><span><b>${nFlag}</b> flagged</span><span class="warn"><b>${OPEN_ITEMS.length}</b> to confirm by hand</span>`;
+      // v15: totals that add up (37 + 6 = 43); the hand checks are a subset, shown separately
+      $('#fcSub').textContent = `Checked against ${nSrc} sources. ${nVC} verified or corrected, ${nFlag} labelled as forecasts, estimates or team hypotheses. ${HAND_CHECKS.done} of ${HAND_CHECKS.total} points that needed a person to open the source were checked by hand on ${HAND_CHECKS.date}.`;
+      $('#fcSplit').innerHTML = `<span><b>${nVC}</b> verified or corrected</span><span><b>${nFlag}</b> labelled as estimates</span><span class="sub"><b>${HAND_CHECKS.done} of ${HAND_CHECKS.total}</b> hand checks done</span>`;
       $('#fcBar').innerHTML = Object.keys(STATUS).map((k) => counts[k] ? `<i style="flex:${counts[k]};background:${COLORS[k]}" title="${esc(STATUS[k].label)}: ${counts[k]}"></i>` : '').join('');
       const f = $('#fcFilters');
       const btn = (k, label, n, desc) => `<button class="fcf${k === filter ? ' on' : ''}" data-f="${k}" style="--k:${COLORS[k] || '#e2e8f0'}" aria-pressed="${k === filter}"><i></i><span><b>${esc(label)}</b><small>${esc(desc)}</small></span><em>${n}</em></button>`;
@@ -1756,7 +1768,7 @@
         const items = CLAIMS.filter((c) => filter === 'all' || c.status === filter);
         list.innerHTML = items.map((c, i) => `<div class="fcr" style="--k:${COLORS[c.status]};--i:${Math.min(i, 14)}">
             <span class="fcr-b">${esc(STATUS[c.status].label)}</span>
-            <div class="fcr-m"><span class="fcr-s">${esc(c.slide)}</span><p>${esc(c.claim)}</p>${c.v1 ? `<span class="fcr-v1">v1: ${esc(c.v1)}</span>` : ''}${c.pending ? `<span class="fcr-p">To confirm: ${esc(c.pending)}</span>` : ''}</div>
+            <div class="fcr-m"><span class="fcr-s">${esc(c.slide)}</span><p>${esc(c.claim)}</p>${c.hand ? `<span class="fcr-h${/^Could not/.test(c.hand) ? ' no' : ''}">${esc(c.hand)}</span>` : ''}</div>
             ${srcLink(c.src)}</div>`).join('');
       } else if (tab === 'sources') {
         list.innerHTML = SRC_IDS.map((id, i) => {
@@ -1766,8 +1778,9 @@
             ${s.url ? `<a class="fc-src" href="${esc(s.url)}" target="_blank" rel="noopener">Open ↗</a>` : '<span class="fc-src">Team document</span>'}</div>`;
         }).join('');
       } else if (tab === 'open') {
-        list.innerHTML = `<p class="fc-intro">These sources were paywalled, blocked to automated access, or quoted second-hand during the audit. The figures are used as reported, but a person should open each one before the deck is final.</p>` +
-          OPEN_ITEMS.map((t, i) => `<div class="fco" style="--i:${Math.min(i, 14)}"><span class="fco-n">${i + 1}</span><p>${esc(t)}</p></div>`).join('');
+        const hc = CLAIMS.filter((c) => c.hand);
+        list.innerHTML = `<p class="fc-intro">These sources were paywalled or quoted second-hand during the audit, so a teammate opened each one by hand on ${esc(HAND_CHECKS.date)}. ${esc(HAND_CHECKS.links)}</p>` +
+          hc.map((c, i) => `<div class="fco${/^Could not/.test(c.hand) ? ' no' : ''}" style="--i:${Math.min(i, 14)}"><span class="fco-n">${/^Could not/.test(c.hand) ? '–' : '✓'}</span><p><b>${esc(c.claim)}</b><br>${esc(c.hand.replace(/^Checked by hand: /, ''))}</p></div>`).join('');
       } else {
         list.innerHTML = GLOSSARY.map(([t, d], i) => `<div class="fcg" style="--i:${Math.min(i, 14)}"><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join('');
       }
@@ -2096,15 +2109,9 @@
     const tl = $('#teamLine');
     if (who) { tl.textContent = who; tl.hidden = false; document.title = `${TEAM.name || 'SDV'} · SDV Value Chain Portfolio`; }
     $('#coverSub').textContent = EXEC.sub;
-    $('#coverAsOf').textContent = `Updated ${TEAM.updated}`;
-    $('#coverClaimsN').dataset.count = CLAIMS.length;
-    $('#verText').textContent = `${CLAIMS.length} market claims audited · ${TEAM.asOf}`;
-    $('#btnReadCover').addEventListener('click', () => mode.set('read', true));
-    // older versions are linked only when they are deployed alongside this one
-    if (!VERSION.showOlder) {
-      $$('.fc-links a[href^="../"]').forEach((a) => a.remove());
-      $('.menu-ver').remove();
-    }
+    // v15: one submission name and one as-of date, in one place
+    $('#coverAsOf').textContent = `${TEAM.submission} · as of ${TEAM.updated}`;
+    $('#verText').textContent = 'Evidence audit';
   }
 
   // feasibility math shared by the slides and the reading view
@@ -2172,19 +2179,16 @@
   const execSlide = {
     build() {
       $('#exBottom').textContent = EXEC.bottomLine;
-      $('#exPath').innerHTML = EXEC.path.map((p) => `<li><button type="button" data-goid="${p.go}"><b>${esc(p.n)}</b><span>${esc(p.t)}</span></button></li>`).join('');
-      $$('#exPath [data-goid]').forEach((b) => b.addEventListener('click', () => goId(b.dataset.goid)));
-      $('#exTargets').innerHTML = WEDGES.list.map((w, k) => `<button class="ext rv" style="${cv(w.colour)};--d:${4 + k}" data-wedge="${w.id}">
+      $('#exTargets').innerHTML = WEDGES.list.map((w, k) => `<button class="ext rv${w.id === 'w2' ? ' weak' : ''}" style="${cv(w.colour)};--d:${4 + k}" data-wedge="${w.id}">
           <span class="ext-n">${esc(w.code)}</span>
           <span class="ext-m"><b>${esc(w.name)}</b><small>${esc(w.short)}</small></span>
-          <span class="ext-tag">${esc(w.tag)}</span>
-          <span class="ext-go" aria-hidden="true">→</span></button>`).join('')
-        + `<p class="ext-out rv" style="--d:7">Our first targets (HIL, zonal and OTA) did not survive a test against real companies. <button type="button" class="ext-link" id="exEvolve">See how our thinking changed →</button></p>`;
+          <span class="ext-tag">${esc(w.id === 'w2' ? 'Weakest' : w.tag)}</span></button>`).join('')
+        + `<p class="ext-out rv" style="--d:7">Of our first targets, real companies dropped zonal and OTA and narrowed HIL into W2. <button type="button" class="ext-link" id="exEvolve">How we narrowed →</button></p>`;
       $('#exEvolve').addEventListener('click', () => goId('s-evolve'));
       $$('#exTargets [data-wedge]').forEach((b) => b.addEventListener('click', () => wedgeSlide.show(b.dataset.wedge)));
       $('#exRisk').innerHTML = `<div class="mini-kicker">Biggest risk</div><p>${esc(EXEC.risk)}</p><button type="button" class="ext-link" id="exRiskGo">Our risks and what we do about them →</button>`;
       $('#exRiskGo').addEventListener('click', () => goId('s-gaps'));
-      $('#exFoot').innerHTML = `Public sources only; no OEM data. Market research as of ${esc(TEAM.asOf)}; company screen ${esc(ROUND2.date)}. All scores are team hypotheses until our first interviews.`;
+      $('#exFoot').textContent = EXEC.howToRead;
     },
   };
 
@@ -2407,9 +2411,9 @@
           <h4>What protects it</h4>
           <p>${esc(b.moat)}</p>
           <div class="bmc-lesson"><h4>What it taught us</h4><p>${esc(b.lesson)}</p></div>
-          <footer><a class="bmc-pdf" href="${esc(b.file)}" target="_blank" rel="noopener">Open the full canvas <small>PDF · ${b.nsrc} cited sources</small> ↗</a></footer>
+          <footer><a class="bmc-pdf" href="${esc(b.file)}" target="_blank" rel="noopener">Open the full canvas ↗ <small>PDF · ${b.nsrc} sources on page 2</small></a></footer>
         </article>`).join('');
-      $('#bmFoot').innerHTML = `<span class="bmc-key"><i class="g-core"></i>Core<i class="g-growth"></i>Growth<i class="g-future"></i>Future bet</span> The brief asks for two companies at different stages of the chain; we built three. Data as of 30 Oct 2026. Chapter 3 tests our ideas against these same three companies.`;
+      $('#bmFoot').innerHTML = `<span class="bmc-key"><i class="g-core"></i>Core business<i class="g-growth"></i>Growing<i class="g-future"></i>Future bet</span> The brief asks for two companies; we built three. Chapter 3 tests our ideas against these same three.`;
     },
   };
 
@@ -2514,9 +2518,20 @@
       const d = $('#peDlg');
       $('img', d).src = p.img; $('img', d).alt = `Full persona card: ${p.name}, a fictional archetype`;
       $('a', d).href = p.img;
+      $('.pe-dlg-t', d).innerHTML = `<b>${esc(p.code)} · ${esc(p.name)}</b><span class="arch">Archetype</span><small>A fictional persona built from public job postings; the quote is imagined. Scroll to read the whole card.</small>`;
       d.showModal();
+      d.scrollTop = 0;
     }
     function build() {
+      // v15: the persona slide merged into "Who we will interview"; only the dialog is built here
+      const d = document.createElement('dialog');
+      d.id = 'peDlg'; d.className = 'pe-dlg'; d.setAttribute('aria-label', 'Full persona card');
+      d.innerHTML = '<div class="pe-dlg-h"><div class="pe-dlg-t"></div><a target="_blank" rel="noopener">Open full size ↗</a><button type="button" class="tog">Close</button></div><img alt="">';
+      document.body.appendChild(d);
+      $('button', d).addEventListener('click', () => d.close());
+      d.addEventListener('click', (e) => { if (e.target === d) d.close(); });
+    }
+    function buildOld() {
       $('#peLegend').innerHTML = Object.values(CO).map(([n, c]) => `<span><i style="background:${c}"></i>${esc(n)}</span>`).join('');
       $('#peGrid').innerHTML = PERSONAS.map((p, k) => `<button type="button" class="pc rv${p.near ? ' near' : ''}" data-i="${k}" style="--k:${CO[p.co][1]};--d:${3 + k * .6}">
         <span class="pc-av">${esc(p.ini)}<small>${esc(p.code)}</small></span>
@@ -2533,13 +2548,13 @@
       $('button', d).addEventListener('click', () => d.close());
       d.addEventListener('click', (e) => { if (e.target === d) d.close(); });
     }
-    return { build };
+    return { build, open };
   })();
 
   // =================================================================== v8 · WEDGE HYPOTHESES (B-2.3.4)
   const wedgeSlide = (() => {
     const W = WEDGES;
-    let sel = 'w1', view = 'wedge';
+    let sel = 'all', view = 'wedge';
     const G = { D: 'Desirability', F: 'Feasibility', V: 'Viability' };
     const col = { w1: 3, w2: 4, w3: 5 };
     const fmt = (n) => String(Math.round(n * 100) / 100);
@@ -2568,7 +2583,29 @@
     const planTable = (w, cls = 'wd-tb') => `<table class="${cls}"><thead><tr><th>Hypothesis</th><th>Type</th><th>Test</th><th>Fails if</th><th>Evidence source</th></tr></thead><tbody>${w.plan.map((p) => `<tr><td><b>${esc(p[0])}</b></td><td>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${esc(p[3])}</td><td>${esc(p[4] || '')}</td></tr>`).join('')}</tbody></table>`;
     const painTable = (w, cls = 'wd-tb') => `<table class="${cls}"><thead><tr><th>Persona</th><th>Their pain</th><th>How this wedge answers it</th></tr></thead><tbody>${w.pains.map((p) => `<tr><td><b>${esc(p[0])}</b></td><td>${esc(p[1])}</td><td>${esc(p[2])}</td></tr>`).join('')}</tbody></table>`;
     const card = (w) => [['End user', w.user], ['Pain', w.pain], ['Our narrow first foothold', w.wedge], ['Input', w.input], ['Output', w.output], ['What changes for the user', w.change], ['Workaround today', w.workaround], ['Budget owner', w.owner]];
+    // v15: the default view puts all three wedges side by side, so the slide makes its point
+    // (and names the weakest) without a click; each column opens that wedge's full canvas.
+    function allHtml() {
+      const t = totals();
+      const cols = W.list.map((w, i) => {
+        const cv = WEDGE_CV[w.id], weak = w.id === 'w2';
+        const bars = [['D', 'Desirability'], ['F', 'Feasibility'], ['V', 'Viability']].map(([k, g]) => {
+          const p = Math.round((t.out[i][k] / t.max[k]) * 100);
+          return `<span class="wa-b" title="${g}: ${p}% of the maximum desk score"><em>${k}</em><i><u style="width:${p}%"></u></i><b>${p}%</b></span>`;
+        }).join('');
+        return `<button type="button" class="wa-c${weak ? ' weak' : ''}" data-w="${w.id}" style="--k:var(--${w.colour}-m)">
+          <header><i>${esc(w.code)}</i><span><b>${esc(w.name)}</b><small>${esc(weak ? 'Weakest today' : w.tag)}</small></span></header>
+          <p class="wa-vp">${esc(w.vp)}</p>
+          <div class="wa-r"><small>First interview question</small><p>${esc(w.ask)}</p></div>
+          <div class="wa-r kill"><small>We drop it if</small><p>${esc(cv.D[2])}</p></div>
+          <div class="wa-r"><small>Who pays</small><p>${esc(w.payer)}</p></div>
+          <div class="wa-bars"><small>Desk scores before interviews</small>${bars}</div>
+          <span class="wa-go">Full canvas and test plan →</span></button>`;
+      }).join('');
+      return `<div class="wa">${cols}</div><p class="wa-weak"><b>Weakest</b> ${esc(W.weakestShort)}</p>`;
+    }
     function body() {
+      if (sel === 'all') return allHtml();
       if (sel === 'dfv') {
         const t = totals();
         const bars = W.list.map((w, i) => `<div class="dfv-w" style="--k:var(--${w.colour}-m)"><span class="dfv-n"><b>${w.code}</b>${esc(w.name)}</span>${['D', 'F', 'V'].map((g) => { const p = Math.round((t.out[i][g] / t.max[g]) * 100); return `<span class="dfv-b"><i style="width:${p}%"></i><em>${G[g]} ${p}%</em></span>`; }).join('')}<strong>${Math.round(t.out[i].pos * 100)}%<small>overall</small></strong></div>`).join('');
@@ -2588,12 +2625,13 @@
         const col = ([g, k, q]) => {
           const pct = Math.round((t.out[i][k] / t.max[k]) * 100), [a, test, kill] = cv[k], weak = w.weakCol === g;
           const m = w.plan.filter((p) => p[1] === g).length - 1;
-          return `<section class="tc${weak ? ' weak' : ''}"><header><i>${k}</i><span><b>${g}</b><small>${q}</small></span>${weak ? '<em title="The least-tested assumption, not the lowest desk score">Riskiest</em>' : ''}</header>
-            <div class="tc-m" title="Desk score before any interview: ${pct}% of the maximum"><i style="width:${pct}%"></i><span>${pct}% desk score</span></div>
+          return `<section class="tc${weak ? ' weak' : ''}"><header><i>${k}</i><span><b>${g}</b><small>${q}</small></span>${weak ? '<em title="The assumption with the least evidence behind it. This is about confidence, not the desk score.">Least tested</em>' : ''}</header>
+            <div class="tc-m" title="Desk score before any interview: ${pct}% of the maximum"><i style="width:${pct}%"></i><span>${pct}% desk score${weak ? ' · untested' : ''}</span></div>
             <ol><li><small>We assume</small>${esc(a)}</li><li><small>Studio 2 test</small>${esc(test)}</li><li class="kill"><small>Drop it if</small>${esc(kill)}</li></ol>
             ${m > 0 ? `<button type="button" class="tc-more" data-v="test">+${m} more test${m > 1 ? 's' : ''} in the full plan</button>` : ''}</section>`;
         };
         v = `<p class="wv-hyp"><b>We believe</b> ${esc(w.hyp.replace(/^We believe /, ''))}</p>
+          <p class="wv-links"><span><b>Our vehicle</b> ${esc(w.vehicle)}</span><span><b>Who pays</b> ${esc(w.payer)}</span>${w.promise ? `<span><b>Promise</b> ${esc(w.promise.replace(/^Promise to test by /, 'to test by '))}</span>` : ''}</p>
           <div class="wv-flow">
             <div><small>Who has it</small><p>${esc(cv.who)}</p></div>
             <div><small>Their pain today</small><p>${esc(cv.pain)}</p></div>
@@ -2610,7 +2648,7 @@
         <div class="seg-lite" role="tablist" aria-label="Wedge sections">${views.map(([id, t]) => `<button type="button" role="tab" aria-selected="${view === id}" class="${view === id ? 'on' : ''}" data-v="${id}">${t}</button>`).join('')}</div></div><div class="wd-b">${v}</div>`;
     }
     function render() {
-      const items = [...W.list.map((w) => [w.id, w.code, w.name, w.tag, w.colour]), ['dfv', 'DFV', 'Scoring all three', '14 criteria', 'Lfive']];
+      const items = [['all', '1–3', 'All three', 'Side by side', 'Lsix'], ...W.list.map((w) => [w.id, w.code, w.name, w.id === 'w2' ? 'Weakest today' : w.tag, w.colour]), ['dfv', 'DFV', 'How we scored them', '14 criteria', 'Lfive']];
       $('#wdTabs').innerHTML = items.map(([id, c, n, t, k]) => `<button type="button" role="tab" aria-selected="${sel === id}" class="wd-t${sel === id ? ' on' : ''}" data-w="${id}" style="--k:var(--${k}-m)"><i>${c}</i><span><b>${esc(n)}</b><small>${esc(t)}</small></span></button>`).join('') + `<p class="wd-rn">${esc(W.intro)}</p>`;
       $('#wdPanel').innerHTML = body();
       hydrateCites();
@@ -2733,7 +2771,7 @@
         + sec('r-asks', 'Chapter 5 · Next steps · Questions for reviewers', 'Where your advice would change what we do next',
           `<ol class="r-asks">${ASKS.map((q) => `<li>${esc(q)}</li>`).join('')}</ol>`);
     }
-    return { build, readerMap, readerRest };
+    return { build, readerMap, readerRest, scorecard };
   })();
 
   // =================================================================== v13 · ORGANIZER VALUE CHAIN, FATES, WHERE NUMBERS COME FROM
@@ -2742,14 +2780,17 @@
     const wd = (id) => WEDGES.list.find((w) => w.id === id);
     const wChip = (id) => { const w = wd(id); return `<span class="ch-w" style="--k:var(--${w.colour}-m)">${w.code}</span>`; };
 
-    function chain() {
+    // v15: the main slide shows three rows (Does, Example challenge, Where we sit) and no layer codes;
+    // the appendix crosswalk shows all six rows with our L01–L08 layers under each stage.
+    function chain(sel = '#chBody', full = false) {
       const C = CHAIN, S = C.stages;
+      const rowsShown = full ? C.rows : C.rows.filter(([k]) => (C.mainRows || C.rows.map((r) => r[0])).includes(k));
       const disc = S.filter((s) => s.zone === 'discovery');
-      let h = `<div class="ch-grid">
+      let h = `<div class="ch-grid${full ? ' full' : ' main'}">
         <div class="ch-zone" style="grid-row:1;grid-column:${disc[0].n + 1} / ${disc[disc.length - 1].n + 2}"><span>EcoCAR discovery zone</span></div>
-        <div class="ch-corner" style="grid-row:2;grid-column:1"><small>Click a row name to focus on it</small></div>`
-        + S.map((st) => `<div class="ch-head ${ZK[st.zone]}" style="grid-row:2;grid-column:${st.n + 1}"><b>${st.n}. ${esc(st.name)}</b><small>${esc(st.sub)}</small><span class="ch-ours">${st.ours.length ? st.ours.map((n) => `<i>L0${n}</i>`).join('') : '<i class="none">not one of our layers</i>'}</span></div>`).join('');
-      C.rows.forEach(([k, label], r) => {
+        <div class="ch-corner" style="grid-row:2;grid-column:1">${full ? '<small>Click a row name to focus on it</small>' : ''}</div>`
+        + S.map((st) => `<div class="ch-head ${ZK[st.zone]}" style="grid-row:2;grid-column:${st.n + 1}"><b>${st.n}. ${esc(st.name)}</b>${full ? `<span class="ch-ours">${st.ours.length ? st.ours.map((n) => `<i>L0${n}</i>`).join('') : '<i class="none">not one of our layers</i>'}</span>` : ''}</div>`).join('');
+      rowsShown.forEach(([k, label], r) => {
         h += `<button type="button" class="ch-rl${k === 'us' ? ' us' : ''}" style="grid-row:${r + 3};grid-column:1" data-row="${k}">${esc(label)}</button>`
           + S.map((st) => {
             let inner = `<span>${rich(st[k])}</span>`;
@@ -2757,8 +2798,8 @@
             return `<div class="ch-c ${ZK[st.zone]}${k === 'us' ? ' us' : ''}" style="grid-row:${r + 3};grid-column:${st.n + 1}" data-row="${k}">${inner}</div>`;
           }).join('');
       });
-      h += `</div><div class="ch-legend">${Object.entries(C.zones).map(([z, t]) => `<span><i class="${ZK[z]}"></i>${esc(t)}</span>`).join('')}<span class="ch-src">Format and zones from the organizers’ example; content is our research. L01–L08 are our eight layers (next slide).</span></div>`;
-      const box = $('#chBody');
+      h += `</div><div class="ch-legend">${Object.entries(C.zones).map(([z, t]) => `<span><i class="${ZK[z]}"></i>${esc(t)}</span>`).join('')}<span class="ch-src">Format and zones from the organizers’ example; content is our research.${full ? '' : ' All six rows, mapped to our layers, are in the appendix.'}</span></div>`;
+      const box = $(sel);
       box.innerHTML = h;
       box.addEventListener('click', (e) => {
         const b = e.target.closest('.ch-rl'); if (!b) return;
@@ -2813,7 +2854,7 @@
       box.innerHTML = `<div class="pl-bar">${kinds.map(([k, c, n]) => `<i class="k-${c}" style="flex:${n}">${n} ${k.toLowerCase()}</i>`).join('')}</div><span>Channels for our 7 personas. 5 of 7 use independent outreach, so at least half of our interviews can come from it, as Studio 2 requires.</span>`;
     }
 
-    function build() { chain(); fates(); scoreNotes(); bmcStages(); pipeBar(); }
+    function build() { chain(); chain('#chxBody', true); fates(); scoreNotes(); bmcStages(); pipeBar(); }
 
     function readerChain(sec) {
       const S = CHAIN.stages;
@@ -2915,11 +2956,129 @@
       const sc = $('#scNote');
       if (sc && !sc.querySelector('details')) sc.innerHTML = `<details class="v14-how"><summary>Where these numbers come from</summary><div>${sc.innerHTML}</div></details>`;
       // evidence audit: shorter subtitle (the counts are on the left)
-      const sub = $('#fcSub');
-      if (sub) sub.textContent = `${CLAIMS.length} market claims checked against their sources on 13 Oct 2026. Filter by status on the left.`;
+      // v15: the audit subtitle is set by fc.build (counts that add up)
     }
 
     function build() { pipeline(); society(); gaps(); asks(); appendix(); }
+    return { build };
+  })();
+
+  // =================================================================== v15 · REVIEW FIXES
+  // Contents as chapter cards with their Check-In codes; one growth callout; a static
+  // company-screen legend with the sponsor check; personas merged into the interview plan;
+  // risks with their dated actions; and progress since 10 Nov.
+  const v15 = (() => {
+    const wd = (id) => WEDGES.list.find((w) => w.id === id);
+    const wChips = (s) => s.split(/,\s*/).map((c) => { const w = WEDGES.list.find((x) => x.code === c.trim()); return w ? `<i class="v-w" style="--k:var(--${w.colour}-m)">${w.code}</i>` : ''; }).join('');
+    const sl = () => [...document.querySelectorAll('#deck > .slide')];
+    const no = (id) => sl().findIndex((s) => s.id === id) + 1;
+    const inCh = (cid) => sl().filter((s) => s.dataset.ch === cid);
+
+    function contents() {
+      const ck = (cid) => CHECKIN.filter((x) => x.ch.includes(cid)).map((x) => `<em title="${esc(x.t)}">Check-In ${esc(x.code)}</em>`).join('');
+      $('#mpGrid').innerHTML = CHAPTERS.filter((c) => typeof c.n === 'number').map((c, k) => `<article class="mp-ch rv" style="--d:${3 + k}">
+          <header><b>${c.n}</b><span>${esc(c.name)}</span></header>
+          <div class="mp-tags">${c.code ? `<i>Brief ${esc(c.code)}</i>` : ''}${ck(c.id)}</div>
+          <p>${esc(c.q)}</p>
+          <ol>${inCh(c.id).map((s) => `<li><button type="button" data-gs="${s.id}"><em>${no(s.id)}</em>${esc(s.dataset.title)}</button></li>`).join('')}</ol></article>`).join('');
+      $('#mpCheck').innerHTML = `<div class="mp-tools"><span class="mp-appx">Appendix: ${inCh('appx').map((s) => `<button type="button" data-gs="${s.id}">${esc(s.dataset.title)}</button>`).join(' · ')}</span>
+        <button type="button" class="tog" id="mpGloss">Glossary of terms</button><button type="button" class="tog" id="mpScore2">Scorecard map</button></div>`;
+      $('#mpScore2').addEventListener('click', () => extra.scorecard());
+      $('#mpGloss').addEventListener('click', () => { goId('s-fc'); setTimeout(() => { const b = $('#tab-glossary'); if (b) b.click(); }, 150); });
+    }
+
+    function grow() {
+      const g = GROW_CALLOUT;
+      $('#growCallout').innerHTML = `<div class="cap-big"><span data-count="11.4" data-dec="1" data-suffix="%">${esc(g.big)}</span><small>${esc(g.unit)}</small></div>
+        <h3>${esc(g.head)}${citeHtml('mck')}</h3><p>${esc(g.body)}</p>`;
+    }
+
+    function screenLegend() {
+      const H = SCORE_HOW.round2;
+      $('#r2Foot').innerHTML = `<div class="r2-key"><span class="r2-k1"><b>Each cell</b> = five team scores, 1–5 each, from public evidence (bars, left to right):</span>
+          ${H.q.map(([k], i) => `<span><em>${i + 1}</em>${esc(k)}</span>`).join('')}
+          <span class="r2-k2"><b>Pass</b> = 17+ of 25, with Fit and Access at least 3${citeHtml('b133v2')}</span></div>
+        <p class="r2-sponsor">${esc(ROUND2.sponsorCheck)}</p>`;
+      // label the five bars on the first cell only, so the reader learns the code once
+      const first = $('#r2Matrix .r2c');
+      if (first && !first.querySelector('.r2c-lab')) first.insertAdjacentHTML('beforeend', `<span class="r2c-lab" aria-hidden="true">${ROUND2.criteria.map((c) => `<i>${esc(c.short)}</i>`).join('')}</span>`);
+    }
+
+    function interview() {
+      const ST = (n) => (/match/.test(n) ? 'found' : n === 'Parked' ? 'park' : n === 'Not started' ? 'new' : 'on');
+      const P = Object.fromEntries(PERSONAS.map((p) => [p.code, p]));
+      const indep = PIPELINE.rows.filter((r) => r.kind !== 'Sponsor').length;
+      const kinds = [['Sponsor', 'sponsor'], ['Both', 'both'], ['Independent', 'independent']].map(([k, c]) => [k, c, PIPELINE.rows.filter((r) => r.kind === k).length]);
+      const maxC = Math.max(...PIPELINE.convs.map((c) => c[1]));
+      const F = PIPELINE.found;
+      const box = $('#plBody');
+      box.className = 'iv rv';
+      box.innerHTML = `<ol class="iv-track">${PIPELINE.rows.map((r, i) => {
+          const p = P[r.p];
+          return `<li class="iv-c st-${ST(r.n)} rv" style="--d:${3 + i * 0.4}">
+          <button type="button" class="iv-b" ${p ? `data-p="${esc(r.p)}"` : 'disabled'} aria-label="${esc(r.p)}: ${esc(r.who)}${p ? '. Open the full persona' : ''}">
+            <header><em>${i + 1}</em><span class="iv-code">${esc(r.p)}</span><span class="arch">${p ? 'Archetype' : 'To draft'}</span></header>
+            ${p ? `<b class="iv-n">${esc(p.name)}</b>` : '<b class="iv-n">Persona to draft</b>'}
+            <p class="iv-who">${esc(r.who)}</p>
+            <div class="iv-w">${wChips(r.w)}</div>
+            <div class="iv-st"><span class="pl-st st-${ST(r.n)}">${esc(r.n)}</span>${r.found ? `<span class="iv-dots" title="${r.found} real ${r.found > 1 ? 'people' : 'person'} matched; names kept private">${'<i></i>'.repeat(r.found)}</span>` : ''}</div>
+            <div class="iv-ch"><span class="pl-k k-${r.kind.toLowerCase()}">${esc(r.kind)}</span></div>
+            <p class="iv-chx">${esc(r.ch)}</p>
+            <footer><small>Next</small>${esc(r.next)}</footer>
+          </button></li>`;
+        }).join('')}</ol>
+        <div class="iv-sum">
+          <div class="po-t"><b>${F.people} real people</b><span>matched to ${F.personas} of our ${F.of} written personas on ${esc(F.date.replace(' 2026', ''))}. Names stay in our private tracker; no one contacted yet.</span></div>
+          <div class="po-t"><b>~10</b><span>interviews. Many people speak to two wedges, so about this many conversations per wedge:</span>
+            <div class="po-cv">${PIPELINE.convs.map(([id, n]) => { const w = wd(id); return `<span style="--k:var(--${w.colour}-m)"><em>${w.code}</em><i><u style="width:${(n / maxC) * 100}%"></u></i><b>${n}</b></span>`; }).join('')}</div></div>
+          <div class="po-t"><b>${indep} of ${PIPELINE.rows.length}</b><span>reachable without a sponsor, so at least half of our interviews can be independent, as Studio 2 requires</span>
+            <div class="pl-bar">${kinds.map(([k, c, n]) => `<i class="k-${c}" style="flex:${n}">${n} ${k.toLowerCase()}</i>`).join('')}</div></div>
+          <div class="po-t po-go"><b>15 Dec</b><span>licence access confirmed and a named Applied Intuition contact</span><button type="button" class="tog" id="poRules">How we reach out and interview</button></div>
+        </div>`;
+      box.addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) personaSlide.open(P[b.dataset.p]); });
+      $('#poRules').addEventListener('click', () => { const d = $('#poDlg'); if (d) d.showModal(); else v14rules(); });
+    }
+    // the outreach-rules dialog from v14, built on demand
+    function v14rules() {
+      const d = document.createElement('dialog');
+      d.id = 'poDlg'; d.className = 'sc-dlg po-dlg'; d.setAttribute('aria-labelledby', 'poDlgH');
+      d.innerHTML = `<header><div><small>Who we will interview</small><h3 id="poDlgH">How we reach out, and how we interview</h3></div><button type="button" class="tog" data-close>Close</button></header>
+        <div class="po-rl"><section><h5>Reaching out</h5><ul>${PIPELINE.rules.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></section>
+        <section><h5>In the interview</h5><ul>${PLAN.rules.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></section></div>`;
+      document.body.appendChild(d);
+      d.addEventListener('click', (e) => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
+      d.showModal();
+    }
+
+    function gaps() {
+      const RC = ['#f87171', '#fbbf24', '#22d3ee', '#a78bfa'];
+      $('#riskCards').innerHTML = RISKS.map((r, k) => `<article class="rg3 rv" style="--d:${3 + k};--rc:${RC[k]}"><div class="rg-k">${esc(r.k)}</div><div class="rg-n">${esc(r.n)}</div><p>${esc(r.t)}</p>
+          <div class="rg-act"><small>What we do · by ${esc(r.by)}</small><p>${esc(r.act)}</p></div></article>`).join('');
+      $('#gpBody').innerHTML = `<div class="rg-line"><h5>Done since 10 Nov</h5><ul>${DONE.map(([k, t, d]) => `<li class="done"><b>${esc(k)}</b>${esc(t)}<em>${esc(d)}</em></li>`).join('')}</ul></div>
+        <div class="rg-line"><h5>Smaller gaps we are closing</h5><ul>${GAPS.map(([k, , a, d]) => `<li><b>${esc(k)}</b>${esc(a)}<em>${esc(d)}</em></li>`).join('')}</ul></div>`;
+    }
+
+    function society() {
+      const n = $('.so2-note'); if (n) n.innerHTML = `<b>${esc(SOCIETY.summary)}</b> ${esc(SOCIETY.note)}`;
+    }
+
+    function dossierAlt() {
+      // W1's dossier: what today's tools show, what they miss, and what W1 adds (general terms)
+      const add = () => {
+        const wk = $('#dpBody .ds-case .wk');
+        if (!wk || wk.dataset.v15) return;
+        wk.dataset.v15 = '1';
+        wk.innerHTML = `<h4>What they use today, and what it misses</h4><table class="alt"><thead><tr><th>Today</th><th>Shows</th><th>Misses</th></tr></thead><tbody>${ALTERNATIVES.map(([a, b, c]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td><td>${esc(c)}</td></tr>`).join('')}</tbody></table><p class="alt-add">${esc(ALT_ADDS)}</p>`;
+      };
+      new MutationObserver(() => { if ($('#doPanel').getAttribute('aria-labelledby') === 'dt-ml') add(); }).observe($('#dpBody'), { childList: true });
+      add();
+    }
+
+    function titles() {
+      // long action titles drop to a smaller size so they stay on one or two lines
+      $$('.head .title').forEach((t) => t.classList.toggle('long', t.textContent.trim().length > 48));
+    }
+    function build() { contents(); grow(); screenLegend(); interview(); gaps(); society(); dossierAlt(); titles(); }
     return { build };
   })();
 
@@ -2934,23 +3093,23 @@
     const ul = (arr, cls = '') => `<ul class="${cls}">${arr.map((t) => `<li>${rich(t)}</li>`).join('')}</ul>`;
     function build() {
       const who = [TEAM.name, TEAM.university].filter(Boolean).join(' · ');
-      const toc = [['r-exec', 'Summary'], ['r-map', 'Contents'], ['r-why', '1 Market'], ['r-eco', 'Ecosystem'], ['r-chain', 'Value chain map'], ['r-vc', 'Value chain'], ['r-grow', 'Growth'], ['r-bmc', '2 Business models'], ['r-ws', '3 Round 1'], ['r-round2', 'Company screen'], ['r-evolve', 'What changed'], ['r-people', 'Personas'], ['r-wedges', '4 Wedges'], ['r-pipeline', '5 Outreach'], ['r-society', 'Society'], ['r-gaps', 'Risks & gaps'], ['r-asks', 'Questions'], ['r-funnel', 'Appendix'], ['r-audit', 'Evidence']];
+      const toc = [['r-exec', 'Summary'], ['r-map', 'Contents'], ['r-why', '1 Market'], ['r-eco', 'Ecosystem'], ['r-chain', 'Value chain map'], ['r-vc', 'Value chain'], ['r-grow', 'Growth'], ['r-bmc', '2 Business models'], ['r-ws', '3 Round 1'], ['r-round2', 'Company screen'], ['r-evolve', 'How we narrowed'], ['r-people', 'Personas'], ['r-wedges', '4 Wedges'], ['r-pipeline', '5 Outreach'], ['r-society', 'Society'], ['r-gaps', 'Risks & gaps'], ['r-asks', 'Questions'], ['r-funnel', 'Appendix'], ['r-audit', 'Evidence']];
       const tg = DOSSIERS.filter((d) => d.focus);
       let h = `<nav class="r-toc" aria-label="Contents">${toc.map(([id, t]) => `<a href="#${id}" data-r="${id}">${t}</a>`).join('')}</nav><div class="r-wrap">`;
 
       // cover
       h += `<header class="r-cover" id="r-top"><div class="r-k">${esc(TEAM.program)} · ${esc(TEAM.track)} · Check-In 1 (B-1.3.1 to B-1.3.3) · Studio 1 (B-2.3.1 to B-2.3.4)</div>${who ? `<div class="r-team">${esc(who)}</div>` : ''}
         <h1>${esc(EXEC.thesis)}</h1><p class="r-lead">${esc(EXEC.sub)}</p>
-        <div class="r-stats"><div><b>9</b>actor groups</div><div><b>8</b>value-chain layers</div><div><b>${CLAIMS.length}</b>claims audited</div><div class="hl"><b>3</b>wedges for customer discovery</div></div>
+        <div class="r-stats"><div><b>8</b>value-chain layers mapped</div><div><b>15</b>company tests: 5 ideas × 3 companies</div><div class="hl"><b>3</b>wedges to test in Studio 2</div></div>
         <p class="r-map"><b>How it is organized:</b> five chapters that follow the Studio 1 brief, then an appendix. <a href="#r-map">See the contents and the Check-In map</a>.</p>
-        <p class="r-asof">Updated ${esc(TEAM.updated)} · market research ${esc(TEAM.asOf)} · company screen ${esc(ROUND2.date)} <button class="r-present" type="button">Present fullscreen ▸</button></p></header>`;
+        <p class="r-asof">${esc(TEAM.submission)} · as of ${esc(TEAM.updated)} <button class="r-present" type="button">Present fullscreen ▸</button></p></header>`;
 
 
       // executive summary
-      h += sec('r-exec', 'Executive summary', 'The opening is the work every OEM must finish before launch',
+      h += sec('r-exec', 'Executive summary', 'Our opening is the evidence work every OEM must finish before launch',
         `<p class="r-bl">${esc(EXEC.bottomLine)}</p><div class="r-facts">${EXEC.facts.map((f) => `<div><b>${esc(f.v)}</b><span>${rich(f.t)}</span></div>`).join('')}</div>
          <h3>Three wedges for customer discovery</h3><ol class="r-targets">${WEDGES.list.map((w, k) => `<li style="${cv(w.colour)}"><a href="#r-wedge-${w.id}"><b>${esc(w.code)} · ${esc(w.name)}</b></a><span>${esc(w.tag)} · ${esc(w.from)} · DFV ${wedgeSlide.pct()[k]}% · confidence low</span></li>`).join('')}</ol>
-         <p class="r-note">Our first screen pointed to HIL, zonal and OTA. Testing them against real companies dropped zonal and OTA and narrowed HIL. <a href="#r-evolve">See how our thinking changed.</a></p>
+         <p class="r-note"><b>Weakest:</b> ${esc(WEDGES.weakestShort)} Our first screen pointed to HIL, zonal and OTA; testing them against real companies dropped zonal and OTA and narrowed HIL. <a href="#r-evolve">How we narrowed.</a></p><p class="r-note">${esc(EXEC.howToRead)}</p>
          <h3>First claim we test for each wedge</h3><ol>${EXEC.tests.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>`);
 
       // why
@@ -3005,7 +3164,7 @@
          <p class="r-note">Every pool ends in 2035, so end values compare like with like; start years differ (2025 or 2030). Source: McKinsey${citeHtml('mck')}. All four sit in layers we rate crowded; our wedges are evidence work beside them, not rivals in them. McKinsey gives no comparable pool for telematics, data or OTA.</p>
          <div class="r-cards c2">
           <article><h4>Every month: telematics, data &amp; cloud</h4><p>Smaller, but still growing: GM guides OnStar to ~$3.1B in 2026, +15%${citeHtml('gm-q1')}; Samsara’s ARR is up 30% a year${citeHtml('samsara')}.</p></article>
-          <article><h4>Integration and V&amp;V: 11.4%/yr</h4><p>The fastest-growing slice of auto software spend, in McKinsey’s cut by activity rather than domain${citeHtml('mck')}. All three of our wedges are validation work.</p></article></div>`,
+          <article><h4>Integration and V&amp;V: 11.4%/yr</h4><p>The fastest-growing of McKinsey’s top-level auto software segments, growing 11.4% a year through 2035${citeHtml('mck')}. Split by function instead, ADAS software grows faster, in a crowded layer. All three of our wedges are validation work.</p></article></div>`,
         'The biggest pools are per-vehicle software and compute, in crowded layers; recurring services are smaller but growing.');
 
       // whitespace
@@ -3041,12 +3200,12 @@
         'Three companies at different stages of the value chain, and what each one taught us about where a student team could fit.');
 
       const co = ROUND2.companies;
-      h += sec('r-round2', 'Round 2 · 26 Oct · Feasibility against real companies', 'Tested against real companies, 3 of 15 pairs pass',
+      h += sec('r-round2', 'Round 2 · 26 Oct · Feasibility against real companies', 'Tested against real companies, 3 of 15 company tests pass',
         `<div class="r-scroll"><table class="r-table"><thead><tr><th>Position</th>${co.map((c) => `<th>${esc(c.name)}</th>`).join('')}</tr></thead>
          <tbody>${ROUND2.positions.map((p) => `<tr><td><b>${esc(p.name)}</b><br><small>${esc(p.sub)}</small></td>${co.map((c) => { const x = r2Pair(p.id, c.id); return `<td><b>${r2Total(x)}</b> of 25<br><small>${esc(x.label)}</small></td>`; }).join('')}</tr>`).join('')}</tbody></table></div>
          <p class="r-note">${esc(ROUND2.rule)} ${esc(ROUND2.notes)}${citeHtml('b133v2')}</p>
-         <h3>All 15 pairs, and what decides each</h3>
-         <div class="r-scroll"><table class="r-table"><thead><tr><th>Pair</th>${ROUND2.criteria.map((c) => `<th>${esc(c.short)}</th>`).join('')}<th>Total</th><th>What decides it</th></tr></thead>
+         <h3>All 15 company tests, and what decides each</h3>
+         <div class="r-scroll"><table class="r-table"><thead><tr><th>Company test</th>${ROUND2.criteria.map((c) => `<th>${esc(c.short)}</th>`).join('')}<th>Total</th><th>What decides it</th></tr></thead>
          <tbody>${ROUND2.positions.flatMap((p) => co.map((c) => ({ p, c, x: r2Pair(p.id, c.id) }))).sort((a, b) => r2Total(b.x) - r2Total(a.x)).map(({ p, c, x }) => `<tr><td>${esc(p.name)} × ${esc(c.name)}</td>${x.s.map((v) => `<td>${v}</td>`).join('')}<td><b>${r2Total(x)}</b></td><td>${esc(x.decide)}${x.margin ? ` ${esc(x.margin)}` : ''}</td></tr>`).join('')}</tbody></table></div>`,
         'Can we do the work, can we reach them, and what can we add that they lack?');
 
@@ -3075,9 +3234,9 @@
             ${d.screened ? '' : `<div class="r-ev"><div><h5>First test</h5><p>${esc(d.first)}</p><h5>We drop it if</h5>${ul(d.kill)}</div><div><h5>Open commercial questions</h5>${ul(d.biz)}</div></div>`}
           </article>`;
         }).join(''),
-        'Confidence rubric: High needs external interviews and primary data, so no target can be High before Studio 1.');
+        'Confidence rubric: High needs external interviews and primary data, so nothing can be above Low before Studio 2 interviews.');
 
-      h += sec('r-people', 'B-2.3.3 · Engineering personas', 'Six people we must convince',
+      h += sec('r-people', 'B-2.3.3 · Engineering personas', 'Six personas: fictional archetypes of the engineers we will interview',
         `<div class="r-cards c2">${PERSONAS.map((p) => `<article><h4>${esc(p.name)} <em>${esc(p.code)} · ${esc(p.title)} · ${esc(p.company)}</em></h4><p><b>${esc(p.tag)}, interview #${p.rank}.</b> ${esc(p.role)}</p><p class="r-persona-q">“${esc(p.quote)}” <small>(imagined quote)</small></p><p><a href="${esc(p.img)}">Full persona card</a></p></article>`).join('')}</div>
          <p class="r-note">Every persona is a fictional archetype, not a real person, and every quote is illustrative. These replace the P1–P8 persona codes from Round 1. ${esc(PERSONA_INSIGHTS.map((x) => x.t + ': ' + x.d).join(' '))}${citeHtml('b133v2')}</p>`,
         'Ranked by who decides and who we can reach first.');
@@ -3090,9 +3249,9 @@
       const COLORS = { verified: '#22c55e', corrected: '#f59e0b', forecast: '#a78bfa', estimate: '#38bdf8', hypothesis: '#94a3b8' };
       const cnt = fc.counts;
       h += sec('r-audit', 'Method & evidence appendix', 'Every material claim, audited and classified',
-        `<p>${CLAIMS.length} market claims audited against ${cnt.nSrc} sources on ${esc(TEAM.asOf)}: <b>${cnt.nVC}</b> verified or corrected; <b>${cnt.nFlag}</b> flagged as forecast, estimate, survey or hypothesis; <b>${OPEN_ITEMS.length}</b> items still need a manual check. <a href="fact-check-report.html">Full audit report</a>. The 26 Oct company screen and the BMCs have their own source lists and were not part of this audit.</p>
-         <h3>Still to confirm by hand</h3><ol>${OPEN_ITEMS.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
-         <h3>Claims</h3><div class="r-claims">${CLAIMS.map((c) => { const s = SOURCES[c.src]; return `<div class="r-claim" style="--k:${COLORS[c.status]}"><span class="r-badge">${esc(STATUS[c.status].label)}</span><div><small>${esc(c.slide)}</small><p>${esc(c.claim)}</p>${c.v1 ? `<p class="r-v1">v1: ${esc(c.v1)}</p>` : ''}${c.pending ? `<p class="r-pend">To confirm: ${esc(c.pending)}</p>` : ''}<p class="r-src">[${srcNum(c.src)}] ${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.pub)}</a>` : esc(s.pub)} · ${esc(s.date)}</p></div></div>`; }).join('')}</div>
+        `<p>${CLAIMS.length} market claims audited against ${cnt.nSrc} sources on ${esc(TEAM.asOf)}: <b>${cnt.nVC}</b> verified or corrected and <b>${cnt.nFlag}</b> labelled as forecasts, estimates or team hypotheses (${cnt.nVC + cnt.nFlag} in all). ${HAND_CHECKS.done} of the ${HAND_CHECKS.total} points that needed a person to open the source were checked by hand on ${esc(HAND_CHECKS.date)}; the ninth, the ${esc(HAND_CHECKS.open)}, could not be. ${esc(HAND_CHECKS.links)} <a href="fact-check-report.html">Full audit report</a>. The 26 Oct company screen and the BMCs have their own source lists and were not part of this audit.</p>
+         <h3>Checked by hand</h3><ul>${CLAIMS.filter((c) => c.hand).map((c) => `<li><b>${esc(c.claim)}.</b> ${esc(c.hand)}</li>`).join('')}</ul>
+         <h3>Claims</h3><div class="r-claims">${CLAIMS.map((c) => { const s = SOURCES[c.src]; return `<div class="r-claim" style="--k:${COLORS[c.status]}"><span class="r-badge">${esc(STATUS[c.status].label)}</span><div><small>${esc(c.slide)}</small><p>${esc(c.claim)}</p>${c.hand ? `<p class="r-pend">${esc(c.hand)}</p>` : ''}<p class="r-src">[${srcNum(c.src)}] ${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.pub)}</a>` : esc(s.pub)} · ${esc(s.date)}</p></div></div>`; }).join('')}</div>
          <h3>Sources</h3><ol class="r-sources">${SRC_IDS.map((id) => { const s = SOURCES[id]; return `<li id="r-src-${id}"><b>${esc(s.pub)}</b>, ${esc(s.title)} (${esc(s.date)}; ${esc(KIND[s.kind])})${s.url ? `. <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url.replace(/^https?:\/\//, '').slice(0, 70))}${s.url.length > 78 ? '…' : ''}</a>` : ''}</li>`; }).join('')}</ol>
          <h3>Glossary</h3><dl class="r-gloss">${GLOSSARY.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')}</dl>`);
 
@@ -3118,7 +3277,7 @@
       // printing (and ?print=1 for PDF export) expands every layer's details
       const openAll = () => $$('details', root).forEach((d) => { d.open = true; });
       if (new URLSearchParams(location.search).get('print')) openAll();
-      window.addEventListener('beforeprint', () => { if (!mode.is('read')) mode.set('read'); openAll(); });
+      window.addEventListener('beforeprint', () => { if (EXPORT) return; if (!mode.is('read')) mode.set('read'); openAll(); });
       $('.r-present', root).addEventListener('click', () => mode.set('present', true));
       // highlight the current section in the contents bar
       const links = $$('.r-toc a', root);
@@ -3178,7 +3337,8 @@
         const q = new URLSearchParams(location.search).get('mode');
         let saved = null;
         try { saved = localStorage.getItem(KEY); } catch (e) { /* storage unavailable */ }
-        if (q === 'read' || q === 'present') { userSet = true; set(q); }
+        if (EXPORT) { userSet = true; set('present'); }
+        else if (q === 'read' || q === 'present') { userSet = true; set(q); }
         else if (saved === 'read' || saved === 'present') { userSet = true; set(saved); }
         else set(tooSmall() ? 'read' : 'present');
         $('#btnMode').addEventListener('click', () => set(m === 'read' ? 'present' : 'read', true));
@@ -3208,6 +3368,7 @@
   extra.build();
   v13.build();
   v14.build();
+  v15.build();
   coverText();
   finder.build();
   buildChrome();

@@ -767,7 +767,7 @@ window.PLAN = {
     { who: 'dSPACE applications engineer, Wixom (dS-2)', why: 'Most reachable, via the EcoCAR sponsor contact. Request by 15 Nov' },
     { who: 'dSPACE product manager (dS-1)', why: 'Decision-maker for ML evidence in the toolchain; a warm introduction from the engineer' },
     { who: 'Stellantis HIL or ADAS validation lead (dS-3)', why: 'One OEM interview covers all three ecosystems' },
-    { who: 'Applied Intuition safety and V&V leads (AI-1, AI-2)', why: 'No named contact by 15 Dec means this pair fails' },
+    { who: 'Applied Intuition safety and V&V leads (AI-1, AI-2)', why: 'No named contact by 15 Dec means this company test fails' },
     { who: 'Perception or ADAS validation leads who retrain models (W3)', why: 'Channels to try: Stellantis, Applied Intuition and WMU alumni. No named contact yet' },
   ],
   aim: 'About 10 people covering 6 W1, 4 W2 and 6 W3 conversations (many speak to two wedges), plus licence and data access confirmed by 15 Dec',
@@ -1710,3 +1710,293 @@ Object.assign(window.NOTES, {
   's-society': 'Five areas. For each: what could go wrong, our guardrails, and what is still open.',
   's-gaps': 'Four risks that could each end a wedge, then one timeline with every action we have committed to, including the smaller fixes due on 30 Nov.',
 });
+
+// =====================================================================
+//  v15 ADDITIONS (12 Nov 2026)
+//  Review fixes: one as-of date, hand-checked audit items, one vocabulary
+//  (pocket, wedge, company test), counts that agree, personas merged into
+//  the interview plan, and shorter slide wording. General terms only.
+// =====================================================================
+window.VERSION.n = 15;
+window.TEAM.updated = '12 Nov 2026';
+window.TEAM.submission = 'Check-In 1 · Studio 1 business portfolio';
+
+// --- One title everywhere (a reviewer felt the old one was missing a word)
+window.EXEC.thesis = 'Where an engineering team can win in the software-defined vehicle market';
+window.EXEC.sub = 'Our Studio 1 business portfolio: how value moves in software-defined vehicles, how incumbents make money, and three wedges we will test with real engineers in Studio 2.';
+window.EXEC.bottomLine = 'The biggest money in software-defined vehicles sits with well-funded incumbents. Our opening is the evidence work every automaker must finish before launch: integration, verification and validation (V&V), the fastest-growing slice of auto software spend.';
+window.EXEC.howToRead = 'How to read this: public sources only, no OEM data. Every score is a team judgement until Studio 2 interviews. Personas are fictional archetypes of real jobs.';
+window.EXEC.risk = 'No one outside the team has confirmed any of the three pains yet. We drop any wedge whose pain Studio 2 interviews do not confirm.';
+
+// --- Vocabulary: pocket (a gap in the market), wedge (what we will test),
+//     company test (one idea scored against one company)
+window.KEY_TERMS = [
+  ['OEM', 'automaker'], ['Tier 1', 'supplier selling systems to OEMs'], ['ECU', 'a small computer controlling one function'],
+  ['E/E', 'electrical/electronic architecture: how a car’s computers and wiring are laid out'],
+  ['HIL', 'test bench with a real ECU and a simulated car'], ['OTA', 'over-the-air software update'], ['ADAS', 'driver assistance'],
+  ['V&V', 'verification and validation'], ['Pocket', 'a critical, not-yet-crowded gap in the chain'],
+  ['Company test', 'one idea scored against one real company'], ['Wedge', 'a narrow first market we will test'],
+];
+window.GLOSSARY.splice(1, 0,
+  ['E/E architecture', 'Electrical/electronic architecture: how a vehicle’s computers, controllers and wiring are organized.'],
+  ['Pocket', 'A critical, not-yet-crowded gap in the value chain. We found seven, one per layer except software platforms.'],
+  ['Company test', 'One idea scored against one real company on five questions (fit, differentiation, need, access, strategic relevance), 25 points in all. Five ideas × three companies = 15 company tests.'],
+  ['Archetype', 'A persona built from public job postings: a realistic job role, not a real person.'],
+);
+
+// --- The evidence audit: 43 claims; 37 verified or corrected, 6 labelled as forecasts,
+//     estimates or hypotheses. 9 points needed a person to open the source; a teammate checked them on 10–11 Nov.
+window.STATUS.corrected.label = 'Corrected';
+window.STATUS.corrected.desc = 'Wording, figure or credit fixed after checking the source';
+(function () {
+  const C = window.CLAIMS;
+  const find = (src, start) => C.find((c) => c.src === src && c.claim.startsWith(start));
+  const hand = (src, start, note) => { const c = find(src, start); if (!c) throw new Error('claim ' + src); c.hand = note; delete c.pending; };
+  hand('mck', '$519B', 'Checked by hand: published January 2026');
+  hand('gm-q3l', 'GM targets', 'Checked by hand: “gross margins of approximately 70%” (GM shareholder letter)');
+  hand('nhtsa', '891', 'Checked by hand: NHTSA’s 2025 table shows 891 recalls covering 29.3M vehicles');
+  hand('gm-10q', 'GM has accrued', 'Checked by hand: “we had accrued $0.5 billion” (10-Q, 30 Jun 2026)');
+  hand('qcom', 'Qualcomm', 'Checked by hand: $1.59B fiscal Q3 automotive revenue, +61% year over year');
+  hand('tsla', 'Tesla', 'Checked by hand: 55% bought FSD outright, 45% subscribe');
+  hand('mck', 'L2 could be', 'Checked by hand: 52% in 2030, holding at 52% in 2035');
+  hand('qnx-dn', '52%', 'Checked by hand: the release and its PDF give no sample size for the VP figure');
+  hand('applied-30', 'Applied Intuition', 'Checked by hand: still in talks to raise $1.5B at a ~$30B valuation (Bloomberg via Investing.com)');
+  hand('harman-zf', 'Harman moved', 'Checked by hand: the deal is cleared in the EU and still in China’s review, so not yet closed');
+  hand('iso21434', 'ISO/SAE 21434', 'Could not check by hand: the standard is paywalled, so the count rests on two secondary sources');
+  hand('china-gb', 'China', 'Checked by hand: China’s GB 44495-2024 was released 23 Aug 2024; India’s AIS-189 and AIS-190 are listed as published by ARAI');
+  C.forEach((c) => { delete c.v1; delete c.pending; });
+})();
+window.HAND_CHECKS = {
+  date: '10–11 Nov 2026',
+  done: 8, total: 9,
+  open: 'ISO/SAE 21434 work-product count (paywalled standard)',
+  links: 'All 15 source links that blocked our automated checker were opened by hand in a browser on 11 Nov; all 15 load.',
+};
+
+// --- Value chain map rows: who plays and how crowded, no market sizes (those live on Where value grows)
+(function () {
+  const L = (id) => window.LAYERS.find((l) => l.id === id);
+  L(1).callStat = 'Chip design wins lock in a supplier for the platform’s life';
+  L(2).callStat = 'A per-unit royalty for the platform’s life';
+  L(3).callStat = 'Per-vehicle software, plus paid upgrades';
+  L(4).callStat = 'Fixes and features shipped after the sale';
+  L(5).callStat = 'Monthly subscriptions after the sale';
+  L(8).callStat = 'Fragmented: tool vendors, test services and in-house teams';
+})();
+
+// --- The organizers' value chain: spell out E/E, and keep three rows on the main slide
+window.CHAIN.stages[1].name = 'E/E (electrical/electronic) architecture';
+window.CHAIN.mainRows = ['does', 'challenge', 'us'];
+
+// --- Where value grows: what the 11.4% measures
+window.GROW_CALLOUT = {
+  big: '11.4%', unit: 'a year',
+  head: 'Spending on integration and V&V services grows 11.4% a year, 2025–2035',
+  body: 'The fastest-growing slice of automotive software spending, in McKinsey’s split by activity rather than by layer. All three of our wedges are validation work in this slice.',
+};
+
+// --- Business models: three revenue lines each, one line on what protects it
+(function () {
+  const B = Object.fromEntries(window.BMCS.map((b) => [b.id, b]));
+  B.ds.money = B.ds.money.slice(0, 3);
+  B.ai.money = B.ai.money.slice(0, 3);
+  B.me.money = B.me.money.slice(0, 3);
+  B.ds.moat = 'Benches, models and test cases built on dSPACE get reused for years, so switching is costly.';
+  B.ai.moat = 'It lands with one tool, then expands, with engineers embedded in customer teams.';
+  B.me.moat = 'Repeat design wins with all top-10 customers, and 250M+ vehicles built with EyeQ.';
+})();
+
+// --- Personas: archetypes, one numbering (the order we contact them), no office addresses
+(function () {
+  const P = Object.fromEntries(window.PERSONAS.map((p) => [p.code, p]));
+  P['dS-2'].company = 'dSPACE';
+  ['dS-2', 'dS-1', 'dS-3', 'AI-1', 'AI-2', 'ME-1'].forEach((c, i) => { P[c].rank = i + 1; });
+})();
+
+// --- Who we will interview: the outreach plan, updated with the 11 Nov persona-matching search.
+//     Counts only: names, titles and links stay in the team's private tracker.
+window.PIPELINE.rows = [
+  { p: 'dS-2', who: 'HIL applications engineer, dSPACE', w: 'W2, W1', ch: 'EcoCAR sponsor contact; one match is a former EcoCAR member', kind: 'Sponsor', n: '2 matches found', next: 'First request by 15 Nov', found: 2 },
+  { p: 'dS-1', who: 'Product manager, AI code generation, dSPACE', w: 'W1', ch: 'Introduction from dS-2 or the EcoCAR sponsor', kind: 'Sponsor', n: '1 match found', next: 'After the first dSPACE call', found: 1 },
+  { p: 'dS-3', who: 'HIL or virtual-validation lead at an OEM that uses dSPACE', w: 'W2, W3, W1', ch: 'Stellantis sponsor contact; WMU alumni', kind: 'Both', n: '2 matches found', next: 'Both matches are WMU alumni: plan the first message', found: 2 },
+  { p: 'AI-1', who: 'Senior system safety engineer, Applied Intuition', w: 'W1', ch: 'LinkedIn message; WMU alumni; conference talks', kind: 'Independent', n: '2 matches found', next: 'First message by 15 Dec', found: 2 },
+  { p: 'AI-2', who: 'V&V lead, autonomy, Applied Intuition', w: 'W1, W3', ch: 'WMU alumni; LinkedIn message', kind: 'Independent', n: 'Searching', next: 'Named match needed by 15 Dec', found: 0 },
+  { p: 'New', who: 'Perception or ADAS validation lead who retrains models, at an OEM or Tier 1', w: 'W3', ch: 'WMU alumni; LinkedIn; SAE and IEEE events', kind: 'Independent', n: 'Not started', next: 'Draft the persona by 30 Nov, then search', found: 0 },
+  { p: 'ME-1', who: 'Safety assurance expert, Mobileye', w: 'W1', ch: 'Warm introduction only, through Stellantis engineers', kind: 'Independent', n: 'Parked', next: 'Waits for a warm introduction', found: 0 },
+];
+window.PIPELINE.found = { people: 7, personas: 4, of: 6, date: '11 Nov 2026' };
+window.PIPELINE.note = 'Names and contact details stay in our private tracker, not on this public site. We have not contacted anyone yet.';
+
+// --- Wedges: the short view shows all three side by side
+(function () {
+  const W = Object.fromEntries(window.WEDGES.list.map((w) => [w.id, w]));
+  W.w1.vp = 'For safety engineers signing off an ML component, evidence about the inputs testing never sampled, which scenario tests and statistics cannot give.';
+  W.w2.vp = 'For HIL leads moving tests to virtual ECUs, measured data on what the virtual run misses, instead of judgment calls.';
+  W.w3.vp = 'For teams retraining perception models, a recorded reason for what to re-test, instead of re-running everything.';
+  W.w1.payer = 'Still to find. To test: a tool vendor’s licence add-on, or a paid pilot.';
+  W.w2.payer = 'Still to find. To test: a paid study, which may be a publication rather than a product.';
+  W.w3.payer = 'Still to find. To test: a yearly licence per ADAS program.';
+  W.w1.vehicle = 'Starts on a learned component in our own CAV perception stack, if it has one (our CAV lead confirms).';
+  W.w2.vehicle = 'Closest to our vehicle-data simulation deliverable; bench work would be extra.';
+  W.w3.vehicle = 'Ties to our CAV perception and toolchain deliverables.';
+  W.w1.promise = 'Promise to test by Feb 2027: evidence for one small component within 1 hour per build.';
+  W.w1.ask = '“When was evidence for an ML component last challenged, and by whom?”';
+  W.w2.ask = '“The last time you moved a test from HIL to SIL, what made you trust it?”';
+  W.w3.ask = '“When one function last changed, how did you decide what to re-test?”';
+  W.w1.bottomUp = 'Bottom-up, in Studio 2: programs × learned components per program × price per evidence package, with price asked in interviews.';
+  W.w1.weakCol = W.w3.weakCol = 'Desirability';
+  W.w2.weakCol = 'Viability';
+})();
+window.WEDGES.weakestShort = 'W2 is our weakest wedge: dSPACE already sells most of the tooling, nobody has been shown paying for this kind of study, and an OEM could run it alone.';
+window.WEDGES.intro = 'W1 and W2 came out of the company screen; W3 was added after it. No interview has tested any of them, so all three are low confidence.';
+
+// --- Company screen: does the sponsor tilt the result?
+window.ROUND2.sponsorCheck = 'Sponsor check: dSPACE is a sponsor, which helps on Access. Without that, W1 still passes with Applied Intuition, which is not a sponsor (19 of 25).';
+
+// --- How we narrowed: the one funnel used everywhere
+window.NARROW = {
+  steps: [
+    { n: '8', t: 'value-chain layers mapped' },
+    { n: '7', t: 'pockets found, one per layer but one' },
+    { n: '4', t: 'shortlisted; 3 kept as targets, SBOM cut at scoring' },
+    { n: '15', t: 'company tests: 5 ideas × 3 companies' },
+    { n: '3', t: 'wedges for Studio 2' },
+  ],
+};
+window.EVOLUTION.timeline = [
+  { d: '5 Oct', t: 'Round 1 shortlist', on: true },
+  { d: '13 Oct', t: 'Market claims audited', on: true },
+  { d: '26 Oct', t: 'Company screen', on: true },
+  { d: '30 Oct', t: 'Business models v2', on: true },
+  { d: '11 Nov', t: 'Hand checks; 7 people matched', on: true },
+  { d: '15 Nov', t: 'First interview request' },
+  { d: '15 Dec', t: 'Access deadline' },
+  { d: 'Studio 2', t: 'Re-score with interviews' },
+];
+window.SCREEN.note = 'Draft scores for the team to calibrate in a 30-minute scoring session, and to re-check after Studio 2 interviews[^b133].';
+
+// --- Risks: each with its dated action; progress since 10 Nov
+window.RISKS = [
+  { k: 'Demand', n: '0 of 3', t: 'wedge pains confirmed by anyone outside the team', act: 'First interview request to the dSPACE applications engineer; 2–3 exploratory interviews before Studio 1 closes', by: '15 Nov' },
+  { k: 'Fit with our vehicle', n: 'W1', t: 'counts as vehicle work only if our CAV perception stack has a small learned component', act: 'Get a yes or no from our CAV lead, and ask the organizers in writing', by: 'Check-In' },
+  { k: 'Access', n: '15 Dec', t: 'deadline for dSPACE licence scope and a named Applied Intuition contact, or W2 and one W1 test fail', act: '7 matching people found for 4 of 6 personas on 11 Nov; still searching for AI-2', by: '15 Dec' },
+  { k: 'Build', n: 'Feb 2027', t: 'W1 and W3 prototypes must work on a realistic component in simulation, or we drop them', act: 'Prototype both on public simulation components and log run time', by: 'Feb 2027' },
+];
+window.GAPS = [
+  ['Personas', 'No persona yet for W3’s likely user, a perception-model release lead', 'Draft one from public job postings, like the other six', '30 Nov'],
+  ['Evidence', 'Some W1 evidence cites a team report we keep private', 'Cite the public job postings and company pages directly', '30 Nov'],
+  ['Market', 'W1 and W2 have only top-down proxies, and W3’s two estimates disagree', 'Build bottom-up counts of programs and prices; ask about price in interviews', 'Studio 2'],
+  ['Process', 'No Hypothesis & Assumptions Registry yet', 'Move each wedge’s assumptions and tests into the registry template', '30 Nov'],
+];
+window.DONE = [
+  ['Sources', '8 of 9 open audit points checked by hand; the ninth (ISO/SAE 21434) is paywalled', '11 Nov'],
+  ['Links', 'All 15 source links our checker could not open load in a browser', '11 Nov'],
+  ['Outreach', '7 real people matched to 4 of our 6 personas (names kept private)', '11 Nov'],
+];
+
+// --- Innovation in society: plain wording, no internal rule numbers
+window.SOCIETY.note = 'Across all five: public sources only, no OEM data, and personas are fictional archetypes.';
+window.SOCIETY.summary = 'The two we stress: never claim more than the evidence shows (safety), and report results by condition, not only on average (fairness).';
+
+// --- Chapters and the Check-In map
+window.CHAPTERS.find((c) => c.id === 'fit').q = 'Where could our skills give us an edge, tested against real companies?';
+window.CHAPTERS.find((c) => c.id === 'next').q = 'Who we interview first, what could go wrong, and what we still need';
+window.CHECKIN = [
+  { code: 'B-1.3.1', t: 'Value chain and business model canvases', ch: ['market', 'incumbents'] },
+  { code: 'B-1.3.2', t: 'Wedge hypotheses, with the weakest named', ch: ['fit', 'wedges'] },
+  { code: 'B-1.3.3', t: 'Outreach matched to our personas', ch: ['next'] },
+];
+window.ASK_TAGS = [['Fit', 's-wedges'], ['Access', 's-pipeline'], ['Priority', 's-wedges'], ['Market size', 's-wedges'], ['IP', 's-dossier']];
+window.GUIDE.groups.forEach((g) => g.rows.forEach((r) => {
+  r.where = r.where.map(([id, x]) => [id === 's-people' ? 's-pipeline' : id, x]).filter(([id], i, a) => a.findIndex(([j]) => j === id) === i);
+}));
+
+// --- W1 against today's tools (general terms; the method stays private)
+window.ALTERNATIVES = [
+  ['Scenario sweeps', 'Show the scenarios you listed pass', 'Say nothing about scenarios nobody listed'],
+  ['Perturbation tests and statistics', 'Estimate how often the component fails', 'Cannot rule out inputs that were never sampled'],
+  ['MIL/SIL/PIL simulation', 'Show the code matches the model', 'Do not show the model is safe to rely on'],
+];
+window.ALT_ADDS = 'W1 aims to add evidence about inputs that were never sampled, delivered inside the toolchain the team already runs.';
+
+Object.assign(window.NOTES, {
+  's-cover': 'Lead with the question: where can an engineering team win in the software-defined vehicle market? Five chapters follow the Studio 1 brief, and every slide states its point in the title.',
+  's-exec': 'The 60-second version: the bottom line, the three wedges (W2 is weakest), and the biggest risk. Everything after this slide is the evidence.',
+  's-evolve': 'Round 1 on the left, where each idea ended up on the right. Three survive in some form: W1 grew from ADAS validation evidence, W2 is narrowed HIL, and edge data selection rides inside W1. The four reasons sit underneath.',
+  's-round2': 'Five ideas against three companies, 15 company tests. The legend explains the five bars. W1 passes with dSPACE (20) and, without sponsor help, with Applied Intuition (19).',
+  's-wedges': 'All three wedges side by side. Read each column top to bottom: who, the pain, what we offer, the interview question, the result that drops it, and the desk scores. W2 is weakest, and the title says so. Click a column for the full plan.',
+  's-pipeline': 'Seven personas in contact order. Four now have real matching people (names private); none contacted yet. Four of seven can be reached without a sponsor. Click a card for the full persona.',
+  's-chainx': 'Appendix. The organizers’ format with all six rows, and which of our eight layers sits under each stage.',
+  's-ws': 'Appendix. Round 1 as placed on 5 Oct: the four picks in the critical-and-fragmented corner, and what happened to each.',
+});
+
+// --- One funnel, used on the cover and in the appendix
+window.FUNNEL = [
+  { n: 8, label: 'value-chain layers mapped', note: 'Six stacked layers plus two that run through all of them (cybersecurity; integration & V&V)', stage: 'B-2.3.1' },
+  { n: 7, label: 'pockets found', note: 'One critical, not-yet-crowded pocket per layer; none in software platforms', stage: 'B-2.3.1' },
+  { n: 4, label: 'shortlisted', note: 'The four in the critical-and-fragmented corner. Scoring kept three as Round 1 targets and cut SBOM.', stage: 'B-2.3.1' },
+  { n: 15, label: 'company tests', note: 'Five ideas scored against dSPACE, Applied Intuition and Mobileye on 26 Oct', stage: 'B-2.3.3' },
+  { n: 3, label: 'wedges for Studio 2', note: 'W1 and W2 came out of the company screen; W3 was added after it', stage: 'B-2.3.4' },
+];
+
+// v15: risks now carry their own dated actions, so the separate timeline is retired
+window.GAP_TIMELINE = [];
+
+// --- v15 fact checks (12 Nov 2026): what the 11.4% measures, China and India dates, S-CORE backers
+(function () {
+  const C = window.CLAIMS;
+  const f = (src, start) => C.find((c) => c.src === src && c.claim.startsWith(start));
+  f('mck', 'Integration, V&V').claim = 'Integration, V&V services: the fastest-growing of McKinsey’s top-level auto software segments, 11.4%/yr through 2035 (split by function, ADAS software grows faster)';
+  const cn = f('china-gb', 'China');
+  cn.claim = 'China (new vehicle types from Jan 2026, all from Jan 2028) and Korea (Aug 2025) enforce R155-aligned rules; India has published AIS-189/190, but the rule making them mandatory is still a draft (June 2026)';
+  cn.hand = 'Checked by hand: GB 44495-2024 released 23 Aug 2024; ARAI lists AIS-189 and AIS-190 as published. Correction: India’s mandate is a June 2026 draft, and China’s second date is 2028';
+  f('applied-30', 'Applied Intuition').hand = 'Checked by hand: offers at ~$30B reported 13 Oct; Bloomberg (11 Nov) says it is still in talks to raise $1.5B at that value';
+  const L = (id) => window.LAYERS.find((l) => l.id === id);
+  L(8).callStat = 'Fragmented: tool vendors, test services and in-house teams';
+  L(8).statcap = 'integration, verification and validation services: the fastest-growing of McKinsey’s top-level auto software segments, through 2035[^mck]';
+  window.EXEC.facts[1].t = 'integration, verification & validation services: the fastest-growing of McKinsey’s top-level auto software segments[^mck]';
+  window.EVOLUTION.stayed[1] = 'Integration and V&V remains the fastest-growing of McKinsey’s auto software segments';
+  window.CHAIN.stages.forEach((st) => { if (st.motion && /fastest-growing slice/.test(st.motion)) st.motion = st.motion.replace('The fastest-growing slice of auto software spend', 'McKinsey’s fastest-growing software segment'); });
+  window.WEDGES.focus = window.WEDGES.focus.replace('It is the fastest-growing slice of auto software spend', 'It is the fastest-growing of McKinsey’s auto software segments');
+  window.SOURCES['score-eclipse'] = { pub: 'Eclipse Foundation', title: 'Eclipse S-CORE launch, backed by BMW Group, Mercedes-Benz, Bosch, ETAS, QNX, Qorix and Accenture', date: '12 Jun 2025', kind: 'primary', url: 'https://newsroom.eclipse.org/node/42222' };
+  const two = L(2);
+  ['moats', 'critical', 'pain', 'winning'].forEach((k) => {
+    if (Array.isArray(two[k])) two[k] = two[k].map((t) => t.replace('OEM-backed open source (Eclipse S-CORE, still pre-1.0)', 'OEM-backed open source (Eclipse S-CORE, backed by BMW, Mercedes-Benz, Bosch, ETAS and QNX at launch[^score-eclipse], still pre-1.0)'));
+  });
+})();
+window.EXEC.bottomLine = 'The biggest money in software-defined vehicles sits with well-funded incumbents. Our opening is the evidence work every automaker must finish before launch: integration, verification and validation (V&V), the fastest-growing segment in McKinsey’s split of auto software.';
+window.GROW_CALLOUT = {
+  big: '11.4%', unit: 'a year',
+  head: 'Integration and V&V services grow 11.4% a year through 2035',
+  body: 'The fastest of McKinsey’s top-level auto software segments. Split by function instead, ADAS software grows faster (left), but that layer is crowded. All three of our wedges are validation work.',
+};
+
+// v15 vocabulary: company test, not pair
+window.ROUND2.rule = window.ROUND2.rule.replace('A pair passes', 'A company test passes');
+window.NOTES['s-round2'] = 'Five ideas against three companies gives 15 company tests, and three pass. Click 20 for W1, then 17 to show a pass that only just passes. The sponsor check under the matrix shows W1 also passes with Applied Intuition, which is not a sponsor.';
+
+// --- v15 review round 2 (independent check, 12 Nov)
+(function () {
+  // ME-1's only route is a warm introduction through Stellantis engineers, a sponsor route
+  const me = window.PIPELINE.rows.find((r) => r.p === 'ME-1');
+  me.kind = 'Sponsor';
+  window.PIPELINE.note = 'Names and contact details stay in our private tracker, not on this public site. We have not contacted anyone yet. Four of the seven personas can be reached without a sponsor, so at least half of our interviews can come from independent outreach, as Studio 2 requires.';
+  // one numbering: the order of the interview cards (the unwritten W3 persona is 6th)
+  window.PERSONAS.find((p) => p.code === 'ME-1').rank = 7;
+  // Mobileye with W1 fails on the total (16 of 25, one short), and access is the weakest score
+  const m = window.ROUND2.pairs['adas.me'];
+  m.cell = 'Near-miss: 1 short'; m.label = 'Near-miss: 16 of 25, one point short; access is the weak score';
+  // one name per idea, everywhere
+  const P = Object.fromEntries(window.ROUND2.positions.map((p) => [p.id, p]));
+  P.zonal.name = 'Zonal migration of legacy ECUs';
+  P.ota.name = 'OTA for commercial & off-highway';
+  P.sbom.name = 'SBOM & cyber lifecycle evidence';
+  window.CHAIN.stages[1].us = 'Zonal migration of legacy ECUs. The work lives inside OEM programs.';
+  window.CHAIN.stages[2].us = 'OTA for commercial & off-highway, and SBOM & cyber lifecycle evidence.';
+  window.STATUS.hypothesis.desc = 'To be tested in Studio 2 interviews';
+  window.SCORE_HOW.round1 = window.SCORE_HOW.round1.replace('Feasibility (0–5)', 'Feasibility (1–5)').replace('Team feasibility (0–5)', 'Team feasibility (1–5)');
+  window.RISKS[1].by = 'our Check-In session';
+  window.RISKS[2].act = '7 real people matched to 4 of 6 personas on 11 Nov; still searching for AI-2';
+})();
+
+window.LAYERS.find((l) => l.id === 7).pocket.text = 'SBOM & cyber lifecycle evidence';
