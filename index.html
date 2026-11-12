@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDV Value Chain Portfolio</title>
+<meta name="description" content="Where an engineering team can win in the software-defined vehicle: an audited, interactive map of the SDV ecosystem and value chain, from eight layers to three candidate wedges, and how our thinking changed along the way.">
+<meta name="theme-color" content="#060a18">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Where an engineering team can win in the software-defined vehicle">
+<meta property="og:description" content="Studio 1 business portfolio: value chain and ecosystem map, 3 business model canvases, 43 audited claims, and 3 candidate wedge hypotheses after testing our first answer against real companies.">
+<meta property="og:image" content="og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="v2.css">
+<link rel="stylesheet" href="v3.css">
+<link rel="stylesheet" href="v6.css">
+<link rel="stylesheet" href="v7.css">
+<link rel="stylesheet" href="v8.css">
+<link rel="stylesheet" href="v9.css">
+<link rel="stylesheet" href="v10.css">
+<link rel="stylesheet" href="v12.css">
+<link rel="stylesheet" href="v13.css">
+  <link rel="stylesheet" href="v14.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234338CA'/%3E%3Cpath fill='white' d='M12 3L4 8l8 5 8-5-8-5zm-6.4 8L4 12l8 5 8-5-1.6-1L12 15l-6.4-4zm0 4L4 16l8 5 8-5-1.6-1L12 19l-6.4-4z'/%3E%3C/svg%3E">
+</head>
+<body>
+<noscript>
+  <div class="nojs">
+    <p class="nojs-k">EcoCAR Innovation Challenge · Product Innovation Track · Western Michigan University · Studio 1 portfolio</p>
+    <h1>Where an engineering team can win in the software-defined vehicle</h1>
+    <p>This portfolio is interactive and needs JavaScript. In short: software-defined vehicles move value from dozens of single-purpose controllers to a few central computers and the software on them, and let automakers keep earning after the sale. The largest pools belong to well-funded incumbents; the opening for an engineering team is the work every OEM must finish before launch, where suppliers are still fragmented.</p>
+    <p><b>Three candidate wedges</b> go into customer discovery (B-2.3.4): safety evidence for ML components, what can leave the HIL bench, and scoping re-tests after a perception model is retrained. Our first screen had pointed to HIL, zonal migration and commercial OTA.</p>
+    <p>A printable version is in <a href="portfolio.pdf">portfolio.pdf</a>; the evidence audit is in <a href="fact-check-report.html">fact-check-report.html</a>.</p>
+  </div>
+</noscript>
+
+<div class="bg" aria-hidden="true">
+  <div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div>
+  <div class="grid"></div><div class="grain"></div>
+</div>
+<div class="spot" aria-hidden="true"></div>
+
+<!-- ============================================================ TOP CHROME -->
+<header class="chrome-top">
+  <button class="brand" data-go="0" aria-label="Back to cover">
+    <span class="brand-mark"></span>
+    <span><b>Studio 1</b> · Software-defined vehicles</span>
+  </button>
+  <div class="chrome-right">
+    <span class="now" id="nowTitle"></span>
+    <button class="ver" id="verPill" title="Open the evidence audit"><span id="verText">43 claims audited · 13 Oct 2026</span></button>
+    <button class="mode-btn" id="btnMode" aria-pressed="false" title="Switch between reading and presentation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v14H4zm9 0h7v14h-7zM6 8v2h3V8zm0 4v2h3v-2zm9-4v2h3V8zm0 4v2h3v-2z"/></svg><span id="modeLabel">Read</span></button>
+    <button class="icon-btn" id="btnFind" aria-label="Find a company (/)" title="Find a company (/)">
+      <svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.2 10.4l5.4 5.4-1.4 1.4-5.4-5.4A6.5 6.5 0 1 1 9.5 3m0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>
+    </button>
+    <button class="icon-btn" id="btnNotes" aria-label="Speaker notes (N)" title="Speaker notes (N)">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3zm3 4v2h10V8zm0 4v2h7v-2z"/></svg>
+    </button>
+    <button class="icon-btn" id="btnMenu" aria-label="All slides (O)" title="All slides (O)">
+      <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+    </button>
+    <button class="icon-btn" id="btnFull" aria-label="Fullscreen (F)" title="Fullscreen (F)">
+      <svg viewBox="0 0 24 24"><path d="M5 5h5V3H3v7h2zm9-2v2h5v5h2V3zM5 14H3v7h7v-2H5zm14 5h-5v2h7v-7h-2z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="deck">
+
+  <section class="slide" data-ch="intro" data-title="Cover" id="s-cover">
+    <div class="stage">
+      <canvas id="coverCanvas" class="cover-canvas"></canvas>
+      <div class="cover-copy">
+        <div class="kicker rv" id="coverKicker">EcoCAR Innovation Challenge · Product Innovation Track · Check-In 1</div>
+        <div class="team-line rv" id="teamLine" hidden></div>
+        <h1 class="cover-title rv" style="--d:1">Where an engineering team can <span class="grad">win</span> in the software&#8209;defined vehicle</h1>
+        <p class="cover-sub rv" style="--d:2" id="coverSub"></p>
+        <div class="cover-stats rv" style="--d:3">
+          <div><b data-count="9">9</b><span>actor groups around the OEM</span></div>
+          <div><b data-count="8">8</b><span>value-chain layers</span></div>
+          <div><b data-count="43" id="coverClaimsN">43</b><span>market claims audited against their sources</span></div>
+          <div class="hl"><b data-count="3">3</b><span>wedges for customer discovery</span></div>
+        </div>
+        <div class="cover-cta rv" style="--d:4">
+          <button class="cta" data-goid="s-exec">Start <span class="arrow">→</span></button>
+          <button class="cta-ghost" id="btnReadCover"><span class="seal read">≡</span><span><b>Read as a document</b> · works on any screen</span></button>
+        </div>
+        <p class="cover-hint rv" style="--d:5">Use <kbd>←</kbd> <kbd>→</kbd> or the arrows at the bottom. Every slide states its point in its title, so you can read it without us. <span class="asof" id="coverAsOf"></span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="intro" data-title="Executive summary" id="s-exec">
+    <div class="stage ex" id="ex">
+      <div class="head">
+        <div class="kicker rv">Executive summary</div>
+        <h2 class="title rv" style="--d:1">The opening is the work every OEM must finish before launch</h2>
+        <p class="sub rv" style="--d:2">Our answer on one page. Every slide after this one is the evidence behind it.</p>
+      </div>
+      <div class="ex-left rv" style="--d:3">
+        <div class="mini-kicker gold">Bottom line</div>
+        <p class="ex-bl" id="exBottom"></p>
+        <div class="mini-kicker">How we got here</div>
+        <ol class="ex-path" id="exPath"></ol>
+      </div>
+      <div class="ex-right">
+        <div class="mini-kicker rv" style="--d:3">Three wedges we will test in Studio 2</div>
+        <div class="ex-targets" id="exTargets"></div>
+        <div class="ex-risk rv" style="--d:8" id="exRisk"></div>
+      </div>
+      <div class="foot ex-foot" id="exFoot"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="intro" data-title="How it is organized" id="s-map">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Contents</div>
+        <h2 class="title rv" style="--d:1">Five chapters, in the order of the Studio 1 brief</h2>
+        <p class="sub rv" style="--d:2">Each chapter answers one question. Click a slide to jump to it, or press → to go in order.</p>
+      </div>
+      <div class="mp-grid" id="mpGrid"></div>
+      <div class="mp-check rv" style="--d:8" id="mpCheck"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="market" data-title="Why SDVs" id="s-why">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Why the market is changing</div>
+        <h2 class="title rv" style="--d:1">Why companies are betting on SDVs</h2>
+        <p class="sub rv" style="--d:2">Software and electronics are growing about 4.5× faster than the vehicle market.</p>
+      </div>
+
+      <div class="why-hero rv" style="--d:3">
+        <div class="mini-kicker">Automotive software &amp; electronics, 2035</div>
+        <div class="mega"><span data-count="519" data-prefix="$" data-suffix="B">$519B</span></div>
+        <div class="mega-cap">McKinsey projection, light vehicles<sup class="cite" data-s="mck"></sup></div>
+        <div class="race">
+          <div class="race-row">
+            <div class="race-lbl"><b>Software &amp; electronics</b><span>4.5%/yr</span></div>
+            <div class="race-track"><div class="race-bar hot" style="--w:100%"></div></div>
+          </div>
+          <div class="race-row">
+            <div class="race-lbl"><b>Vehicles overall</b><span>~1%/yr</span></div>
+            <div class="race-track"><div class="race-bar" style="--w:22%"></div></div>
+          </div>
+        </div>
+        <div class="bottomline">
+          <div class="mini-kicker gold">Bottom line</div>
+          <p>The money is real but concentrated. The openings are in work every OEM must finish before launch, where suppliers are still fragmented: we shortlisted four, then narrowed further against real companies.</p>
+        </div>
+      </div>
+
+      <div class="why-grid">
+        <article class="why-card tilt rv" style="--d:4; --c:var(--Lfive-m)">
+          <div class="wc-top"><span class="wc-ico" data-icon="cash"></span><span class="wc-k">Recurring revenue</span></div>
+          <div class="wc-num"><span data-count="3.1" data-prefix="$" data-suffix="B" data-dec="1">$3.1B</span> <small>OnStar, 2026 guide</small></div>
+          <p>GM guides ~$3.1B of OnStar revenue for 2026<sup class="cite" data-s="gm-q1"></sup> and targets <b>~70% gross margins</b> on OnStar and Super Cruise<sup class="cite" data-s="gm-q3l"></sup>.</p>
+        </article>
+        <article class="why-card tilt rv" style="--d:5; --c:var(--Lone-m)">
+          <div class="wc-top"><span class="wc-ico" data-icon="chip"></span><span class="wc-k">Cheaper hardware</span></div>
+          <div class="wc-num"><span class="ecu-from">17</span> <span class="wc-arrow">→</span> <span>7</span> <small>ECUs</small></div>
+          <div class="ecus" id="ecus" aria-hidden="true"></div>
+          <p>Rivian’s Gen 2 R1 cut ECUs from 17 to 7<sup class="cite" data-s="rivian"></sup>.</p>
+        </article>
+        <article class="why-card tilt rv" style="--d:6; --c:var(--Lfour-m)">
+          <div class="wc-top"><span class="wc-ico" data-icon="ota"></span><span class="wc-k">Cheaper recalls</span></div>
+          <div class="wc-num"><span data-count="29.3" data-suffix="M" data-dec="1">29.3M</span> <small>recalled</small></div>
+          <p>891 US vehicle recalls in 2025<sup class="cite" data-s="nhtsa"></sup>. OTA fixes could save US OEMs <b>$1.5B by 2028</b> (2023 forecast)<sup class="cite" data-s="abi"></sup>.</p>
+        </article>
+        <article class="why-card tilt rv" style="--d:7; --c:var(--Lthree-m)">
+          <div class="wc-top"><span class="wc-ico" data-icon="gauge"></span><span class="wc-k">Faster development</span></div>
+          <div class="wc-num"><span>18–24</span> <small>month cycles</small></div>
+          <p>Chinese rivals target development cycles of 18 to 24 months, about half the Western norm<sup class="cite" data-s="spg-china"></sup>.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="market" data-title="Ecosystem" id="s-eco">
+    <div class="stage eco" id="eco">
+      <div class="head">
+        <div class="kicker rv">Ecosystem diagram</div>
+        <h2 class="title rv" style="--d:1">SDV ecosystem</h2>
+        <p class="sub rv" style="--d:2">The OEM is still the hub, but SDVs add a second revenue loop after the sale</p>
+      </div>
+      <svg class="eco-svg" id="ecoSvg" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+      <div class="eco-html" id="ecoHtml"></div>
+      <div class="narr" id="narr" aria-live="polite"></div>
+      <div class="eco-bar rv" style="--d:6">
+        <div class="seg-ctl" id="eraCtl" role="radiogroup" aria-label="Era">
+          <button data-era="before" role="radio">Before SDV</button>
+          <button data-era="after" class="on" role="radio">With SDV</button>
+          <i class="seg-thumb"></i>
+        </div>
+        <span class="bar-sep"></span>
+        <button class="tog on" data-tog="goods"><i class="sw sw-goods"></i>Goods</button>
+        <button class="tog on" data-tog="money"><i class="sw sw-money">$</i>Money</button>
+        <button class="tog on" data-tog="data"><i class="sw sw-data"></i>Data</button>
+        <span class="bar-sep"></span>
+        <span class="bar-k shift-k">SDV shifts</span>
+        <div class="shift-btns" id="shiftBtns"></div>
+        <button class="play" id="playShifts" aria-label="Play the four shifts"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Play</span></button>
+      </div>
+      <aside class="drawer" id="drawer" aria-hidden="true"></aside>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="market" data-title="Value chain stages" id="s-chain">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Value chain · the organizers’ format</div>
+        <h2 class="title rv" style="--d:1">All three wedges sit inside the EcoCAR discovery zone</h2>
+        <p class="sub rv" style="--d:2">The organizers’ seven-stage value chain, filled in with our research. The positions we dropped all sat outside the zone.</p>
+      </div>
+      <div class="ch-wrap rv" style="--d:3" id="chBody"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="market" data-title="Value chain" id="s-vc">
+    <div class="stage vc" id="vc">
+      <div class="head">
+        <div class="kicker rv">Value chain map</div>
+        <h2 class="title rv" style="--d:1">SDV value chain</h2>
+        <p class="sub rv" style="--d:2">Six layers shown where they live in the car, and two that wrap around it</p>
+      </div>
+      <div class="vc-tools rv" style="--d:3">
+        <span class="bar-k">Lens</span>
+        <div class="seg-ctl" id="lensCtl" role="radiogroup" aria-label="Lens">
+          <button data-lens="layers" class="on" role="radio">Layers</button>
+          <button data-lens="competition" role="radio">Competition</button>
+          <button data-lens="capture" role="radio">Value capture</button>
+          <button data-lens="pockets" role="radio">Open pockets</button>
+          <i class="seg-thumb"></i>
+        </div>
+        <button class="tog" id="tExplode"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Explode</button>
+        <button class="tog" id="tTour"><svg class="fill" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Tour the car</span></button>
+        <button class="tog icon" id="tReplay" aria-label="Replay the build animation" title="Replay the build animation"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v5h5"/></svg></button>
+      </div>
+      <div class="lens-legend" id="lensLegend"></div>
+
+      <div class="rail">
+        <div class="rail-top"><b>RECURRING</b><span>after the sale</span></div>
+        <div class="rail-arrows">
+          <div class="ra ra-up"><div class="ra-shaft"><i></i><i></i><i></i></div><span>FEATURES FLOW UP</span></div>
+          <div class="ra ra-down"><div class="ra-shaft"><i>$</i><i>$</i><i>$</i></div><span>MONEY FLOWS DOWN</span></div>
+        </div>
+        <div class="rail-bot"><b>ONE-TIME</b><span>per vehicle</span></div>
+      </div>
+
+      <div class="rig" id="rig">
+        <svg id="carSvg" viewBox="0 0 1600 900" role="img" aria-label="Side view of a car with each value-chain layer shown where it lives">
+          <defs>
+            <path id="bodyShape" d="M206 604 C208 590 216 578 238 568 C272 554 322 540 372 528 C410 498 450 472 506 458 C556 448 616 446 668 454 C716 462 768 494 804 518 C826 526 844 534 850 548 C857 570 857 604 846 630 C842 638 832 642 818 642 L793 642 A70 70 0 1 0 657 642 L413 642 A70 70 0 1 0 277 642 L226 642 C212 636 204 622 206 604 Z"/>
+            <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9db4f5" stop-opacity=".26"/><stop offset=".55" stop-color="#6a80c8" stop-opacity=".1"/><stop offset="1" stop-color="#3b4a86" stop-opacity=".2"/></linearGradient>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#eef3ff"/><stop offset=".55" stop-color="#a9bcf0"/><stop offset="1" stop-color="#5d6fa8"/></linearGradient>
+            <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cfe0ff" stop-opacity=".34"/><stop offset=".5" stop-color="#7f9be0" stop-opacity=".1"/><stop offset="1" stop-color="#7f9be0" stop-opacity=".2"/></linearGradient>
+            <linearGradient id="hlBeam" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#eaf2ff" stop-opacity=".3"/><stop offset="1" stop-color="#eaf2ff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="reflFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="gleamGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <radialGradient id="floorGlow"><stop offset="0" stop-color="#6366f1" stop-opacity=".55"/><stop offset=".6" stop-color="#6366f1" stop-opacity=".12"/><stop offset="1" stop-color="#6366f1" stop-opacity="0"/></radialGradient>
+            <radialGradient id="tireGrad"><stop offset=".72" stop-color="#1b2342"/><stop offset=".86" stop-color="#0c1228"/><stop offset="1" stop-color="#060a18"/></radialGradient>
+            <radialGradient id="rimGrad"><stop offset="0" stop-color="#3a4a7c"/><stop offset=".8" stop-color="#141b36"/><stop offset="1" stop-color="#0c1228"/></radialGradient>
+            <pattern id="battCells" width="19" height="26" patternUnits="userSpaceOnUse"><rect x="1.5" y="3" width="16" height="20" rx="2" fill="#93a7dc" fill-opacity=".11" stroke="#93a7dc" stroke-opacity=".3"/></pattern>
+            <mask id="reflMask" maskUnits="userSpaceOnUse" x="150" y="682" width="760" height="70"><rect x="150" y="682" width="760" height="70" fill="url(#reflFade)"/></mask>
+            <clipPath id="bodyClip"><use href="#bodyShape"/></clipPath>
+          </defs>
+
+          <g id="cam">
+            <!-- where things live -->
+            <g class="car-only tags">
+              <line class="zone-sep" x1="190" y1="344" x2="880" y2="344"/>
+              <line class="zone-sep" x1="190" y1="722" x2="880" y2="722"/>
+              <text class="zone-k" x="192" y="214">OFF THE CAR</text>
+              <text class="zone-k" x="192" y="366">IN THE CAR</text>
+              <text class="zone-k" x="720" y="744">BEFORE LAUNCH</text>
+            </g>
+
+            <!-- ground: glow, reflection, contact shadows -->
+            <g class="car-only" id="ground">
+              <ellipse cx="530" cy="690" rx="400" ry="30" fill="url(#floorGlow)"/>
+              <g mask="url(#reflMask)" opacity=".5" id="refl">
+                <use href="#bodyShape" transform="matrix(1 0 0 -1 0 1364)" fill="url(#bodyGrad)" stroke="#a9bcf0" stroke-width="1.5"/>
+                <circle cx="345" cy="738" r="56" fill="#141b36"/><circle cx="725" cy="738" r="56" fill="#141b36"/>
+              </g>
+              <ellipse cx="345" cy="684" rx="66" ry="7" fill="#02040c" opacity=".9"/>
+              <ellipse cx="725" cy="684" rx="66" ry="7" fill="#02040c" opacity=".9"/>
+            </g>
+
+            <!-- exploded view: slabs the parts settle onto -->
+            <g class="ex-only" id="exSlabs"></g>
+
+            <!-- 07 cybersecurity: a boundary around everything -->
+            <g class="part" data-layer="7">
+              <g class="car-only">
+                <path class="shield-hit" d="M180 652 C168 610 172 574 206 552 C250 530 318 518 352 512 C392 472 440 434 498 424 C556 412 628 412 680 426 C734 440 782 476 818 502 C850 514 872 530 876 558 C884 590 882 628 870 656 C864 672 848 678 826 678 L214 678 C196 678 186 668 180 652 Z"/>
+                <path class="shield" d="M180 652 C168 610 172 574 206 552 C250 530 318 518 352 512 C392 472 440 434 498 424 C556 412 628 412 680 426 C734 440 782 476 818 502 C850 514 872 530 876 558 C884 590 882 628 870 656 C864 672 848 678 826 678 L214 678 C196 678 186 668 180 652 Z"/>
+                <path class="shield-draw" pathLength="1" d="M180 652 C168 610 172 574 206 552 C250 530 318 518 352 512 C392 472 440 434 498 424 C556 412 628 412 680 426 C734 440 782 476 818 502 C850 514 872 530 876 558 C884 590 882 628 870 656 C864 672 848 678 826 678 L214 678 C196 678 186 668 180 652 Z"/>
+              </g>
+              <rect class="ex-only shield ex-frame" x="196" y="170" width="696" height="506" rx="26"/>
+            </g>
+
+            <g id="carRoot">
+              <!-- the car: a quiet x-ray, so the layers carry the colour -->
+              <g id="shell" aria-hidden="true">
+                <g id="shellFill">
+                  <path class="hl-beam" d="M216 596 L120 566 L120 652 Z" fill="url(#hlBeam)"/>
+                  <use href="#bodyShape" fill="url(#bodyGrad)"/>
+                  <path class="glass" d="M380 527 C414 500 454 474 506 461 L512 471 C468 482 430 502 398 526 Z"/>
+                  <path class="glass" d="M398 526 C430 502 468 482 512 471 C536 465 556 463 566 463 L566 518 Z"/>
+                  <path class="glass" d="M578 462 C616 460 642 462 668 468 C698 476 730 496 752 512 L578 516 Z"/>
+                  <path class="glass dim-g" d="M678 462 C716 472 762 502 792 520 L762 514 C738 496 708 476 678 468 Z"/>
+                  <path class="ghost" d="M572 463 L572 640"/>
+                  <path class="ghost" d="M402 528 C398 565 402 610 418 640"/>
+                  <path class="ghost" d="M756 516 C756 530 750 542 742 552"/>
+                  <path class="ghost shoulder" d="M238 578 C350 548 600 528 840 542"/>
+                  <path class="ghost" d="M416 630 L656 630"/>
+                  <path class="ghost" d="M524 534 L552 532 M706 524 L732 523"/>
+                  <path class="ghost-fill" d="M404 520 C390 514 378 516 376 524 C378 530 392 530 404 526 Z"/>
+                  <path class="ghost-fill" transform="translate(0 8)" d="M446 478 C454 474 462 476 466 482 L480 546 L502 548 C508 550 508 558 502 560 L456 560 C450 560 448 556 448 550 Z" opacity=".7"/>
+                  <path class="ghost-fill" transform="translate(0 8)" d="M606 482 C614 478 622 480 626 486 L638 546 L660 548 C666 550 666 558 660 560 L616 560 C610 560 608 556 608 550 Z" opacity=".7"/>
+                  <path class="ghost" d="M428 516 L412 534"/><ellipse class="ghost" cx="410" cy="537" rx="4" ry="12" transform="rotate(35 410 537)"/>
+                  <rect x="420" y="612" width="230" height="26" rx="5" fill="url(#battCells)" stroke="#93a7dc" stroke-opacity=".4"/>
+                  <path class="light hl" d="M214 592 C232 580 262 568 296 560 L298 565 C266 574 236 586 218 598 Z"/>
+                  <path class="light tl" d="M810 524 C830 530 844 536 851 550 L845 551 C838 540 824 536 808 529 Z"/>
+                  <g clip-path="url(#bodyClip)"><rect id="gleam" x="-140" y="420" width="130" height="240" fill="url(#gleamGrad)" transform="skewX(-16)"/></g>
+                </g>
+                <path class="bloom-line" d="M206 604 C208 590 216 578 238 568 C272 554 322 540 372 528 C410 498 450 472 506 458 C556 448 616 446 668 454 C716 462 768 494 804 518 C826 526 844 534 850 548 C857 570 857 604 846 630"/>
+                <path class="body-line" id="ln1" pathLength="1" d="M206 604 C208 590 216 578 238 568 C272 554 322 540 372 528 C410 498 450 472 506 458 C556 448 616 446 668 454 C716 462 768 494 804 518 C826 526 844 534 850 548 C857 570 857 604 846 630"/>
+                <path class="body-line low" id="ln2" pathLength="1" d="M206 604 C204 622 212 636 226 642 L277 642 A70 70 0 1 1 413 642 L657 642 A70 70 0 1 1 793 642 L818 642 C832 642 842 638 846 630"/>
+                <g id="wheels"></g>
+              </g>
+
+              <!-- 01 compute & E/E: central computer, zonal controllers, backbone -->
+              <g class="part" data-layer="1"><g class="ex" data-ax="535" data-ay="574" data-tx="490" data-es=".75">
+                <circle class="halo" cx="535" cy="574" r="96"/>
+                <path class="backbone draw" pathLength="1" d="M493 566 C460 562 440 548 400 546 C360 544 320 545 296 552 C282 556 270 564 262 572"/>
+                <path class="backbone draw" pathLength="1" d="M577 566 C610 562 632 550 670 548 C710 546 750 545 776 552 C790 556 802 564 808 572"/>
+                <path class="spur" d="M299 552 L299 553 M771 552 L771 553"/><g class="car-only"><path class="spur" d="M432 546 L432 516 M650 548 L650 516"/><rect class="ff ecu" x="419" y="500" width="26" height="16" rx="3"/><rect class="ff ecu" x="637" y="500" width="26" height="16" rx="3"/></g>
+                <rect class="ff ecu" x="286" y="552" width="26" height="16" rx="3"/><rect class="ff ecu" x="758" y="552" width="26" height="16" rx="3"/>
+                <rect class="ff zone" x="238" y="572" width="46" height="28" rx="6"/><rect class="ff zone" x="786" y="572" width="46" height="28" rx="6"/>
+                <text class="t-z" x="261" y="590" text-anchor="middle">ZONE</text><text class="t-z" x="809" y="590" text-anchor="middle">ZONE</text>
+                <path class="pins" d="M505 546V539M520 546V539M535 546V539M550 546V539M565 546V539M505 609V602M520 609V602M535 609V602M550 609V602M565 609V602M486 558H493M486 574H493M486 590H493M577 558H584M577 574H584M577 590H584"/>
+                <rect class="chip" x="493" y="546" width="84" height="56" rx="8"/>
+                <rect class="chip-die" x="503" y="554" width="64" height="40" rx="4"/>
+                <text class="t-c" x="535" y="578" text-anchor="middle">CENTRAL</text>
+              </g></g>
+
+              <!-- 02 software platforms: not a box, it runs on the central computer -->
+              <g class="part" data-layer="2"><g class="ex" data-ax="541" data-ay="520" data-es="1.25">
+                <circle class="halo" cx="541" cy="518" r="60"/>
+                <g class="plate-w p1"><path class="plate" d="M505 538 L561 538 L577 526 L521 526 Z"/></g>
+                <g class="plate-w p2"><path class="plate" d="M505 524 L561 524 L577 512 L521 512 Z"/></g>
+                <g class="plate-w p3"><path class="plate" d="M505 510 L561 510 L577 498 L521 498 Z"/></g>
+              </g></g>
+
+              <!-- 03 ADAS & AD: sensors around the body -->
+              <g class="part" data-layer="3">
+                <defs><linearGradient id="coneL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" style="stop-color:var(--c)" stop-opacity=".62"/><stop offset="1" style="stop-color:var(--c)" stop-opacity="0"/></linearGradient><linearGradient id="coneR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--c)" stop-opacity=".62"/><stop offset="1" style="stop-color:var(--c)" stop-opacity="0"/></linearGradient></defs>
+                <g class="car-only">
+                  <polygon class="cone" points="458,486 190,430 190,540"/>
+                  <polygon class="cone b" points="208,612 150,582 150,642"/>
+                  <polygon class="cone r b" points="852,600 892,578 892,622"/>
+                  <path class="stem" d="M362 412 C410 410 460 424 490 444"/>
+                </g>
+                <g class="ex" data-ax="510" data-ay="449" data-tx="560"><circle class="halo" cx="510" cy="449" r="44"/><rect class="sensor" x="492" y="442" width="36" height="14" rx="4"/><rect class="sensor-b" x="498" y="437" width="24" height="6" rx="2"/></g>
+                <g class="ex" data-ax="458" data-ay="486" data-tx="470"><circle class="halo" cx="458" cy="486" r="22"/><circle class="sensor" cx="458" cy="486" r="5.5"/></g>
+                <g class="ex" data-ax="208" data-ay="612" data-tx="380"><circle class="halo" cx="208" cy="612" r="24"/><circle class="sensor" cx="208" cy="612" r="6.5"/></g>
+                <g class="ex" data-ax="398" data-ay="522" data-tx="650"><circle class="halo" cx="398" cy="522" r="18"/><circle class="sensor" cx="398" cy="522" r="4.5"/></g>
+                <g class="ex" data-ax="852" data-ay="600" data-tx="310"><circle class="halo" cx="852" cy="600" r="24"/><circle class="sensor" cx="852" cy="600" r="6.5"/></g>
+                <g class="ex" data-ax="826" data-ay="533" data-tx="720"><circle class="halo" cx="826" cy="533" r="18"/><circle class="sensor" cx="826" cy="533" r="4.5"/></g>
+              </g>
+
+              <!-- 04 OTA: a package travels cloud, antenna, computer, then every controller -->
+              <g class="part" data-layer="4">
+                <g class="car-only">
+                  <path class="hit" d="M528 298 C540 342 590 378 630 420"/><path class="hit" d="M632 498 C612 514 580 528 556 546"/>
+                  <path class="ota-line" d="M528 298 C540 342 590 378 630 420"/>
+                  <path class="ota-line" d="M632 498 C612 514 580 528 556 546"/>
+                </g>
+                <g class="ex-only">
+                  <g transform="translate(540 380)"><rect class="ota-pkg" x="-19" y="-15" width="38" height="30" rx="6"/><path class="ota-arrow" d="M0 -8V5M-6 0L0 6L6 0"/></g>
+                  <path class="ota-line" d="M340 380H515M565 380H690"/>
+                </g>
+              </g>
+
+              <!-- 05 telematics: roof antenna + connectivity unit -->
+              <g class="part" data-layer="5"><g class="ex" data-ax="645" data-ay="459" data-tx="530">
+                <circle class="halo" cx="645" cy="442" r="58"/>
+                <path class="fin" d="M620 450 C632 436 648 428 664 426 C661 436 663 446 668 455 Z"/>
+                <path class="s" stroke-width="1.5" d="M645 452 L645 478"/>
+                <rect class="ff" x="622" y="478" width="46" height="20" rx="4"/>
+                <text class="t-z" x="645" y="492" text-anchor="middle">TCU</text>
+                <g class="car-only"><path class="arc" d="M667 402 A24 24 0 0 0 623 402"/><path class="arc a2" d="M677 390 A38 38 0 0 0 613 390"/><path class="arc a3" d="M687 378 A52 52 0 0 0 603 378"/></g>
+              </g></g>
+
+              <!-- 08's harness runs into the car floor -->
+              <g class="car-only"><path class="harness-up" d="M528 738 C528 700 542 672 544 640"/></g>
+            </g>
+
+            <!-- 06 data & cloud: off the car -->
+            <g class="part" data-layer="6"><g class="ex" data-ax="502" data-ay="250" data-es=".62">
+              <circle class="halo" cx="502" cy="252" r="130"/>
+              <path class="cloud" d="M436 298 C412 298 398 282 400 264 C402 246 418 236 434 238 C440 216 462 204 486 208 C506 210 522 222 528 238 C546 230 568 240 572 258 C594 258 606 274 604 286 C602 294 594 298 586 298 Z"/>
+              <rect class="cloud-bar" x="456" y="250" width="92" height="7" rx="2"/><rect class="cloud-bar c2" x="456" y="263" width="92" height="7" rx="2"/><rect class="cloud-bar c3" x="456" y="276" width="92" height="7" rx="2"/>
+              <path class="s car-only up-line" stroke-width="1.4" stroke-dasharray="2 6" d="M650 406 C640 360 606 326 566 298"/>
+            </g></g>
+
+            <!-- 08 integration + V&V: on the bench, before launch -->
+            <g class="part" data-layer="8"><g class="ex" data-ax="592" data-ay="794" data-es=".62">
+              <circle class="halo" cx="592" cy="794" r="110"/>
+              <rect class="bench" x="490" y="738" width="72" height="104" rx="6"/>
+              <rect class="bench-s" x="500" y="750" width="52" height="8" rx="2"/><rect class="bench-s" x="500" y="766" width="52" height="8" rx="2"/><rect class="bench-s" x="500" y="782" width="52" height="8" rx="2"/>
+              <circle class="led" cx="544" cy="754" r="2.4"/><circle class="led l2" cx="544" cy="770" r="2.4"/><circle class="led l3" cx="544" cy="786" r="2.4"/>
+              <text class="t-c" x="526" y="822" text-anchor="middle">HIL</text>
+              <rect class="bench" x="574" y="746" width="108" height="66" rx="6"/>
+              <path class="wave" d="M582 784 L594 784 L600 764 L608 798 L616 772 L624 784 L638 784 L644 758 L652 800 L660 780 L674 780"/>
+              <rect class="bench" x="612" y="812" width="32" height="30" rx="2"/>
+              <rect class="bench" x="476" y="842" width="218" height="9" rx="3"/>
+            </g></g>
+
+          </g>
+        </svg>
+        <canvas id="carFx" aria-hidden="true"></canvas>
+        <div id="carLabels"></div>
+      </div>
+      <svg class="leaders" id="leaders" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+
+      <div class="where" id="where"></div>
+
+      <div class="col-heads rv" style="--d:3"><span>Who plays · How value is captured</span><span>Open pocket · Competition</span></div>
+      <div class="callouts" id="callouts"></div>
+      <div class="foot">Schematic: parts vary by vehicle. ★ where W1 and W2 sit; the Open pockets lens shows them and what we dropped. Ratings and pockets are team hypotheses. <b>Click any layer for its deep dive.</b></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="market" data-title="Where value grows" id="s-grow">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Value capture</div>
+        <h2 class="title rv" style="--d:1">Where the money grows</h2>
+        <p class="sub rv" style="--d:2">The biggest pools are per-vehicle software and compute, in crowded layers; recurring services are smaller but growing</p>
+      </div>
+      <div class="chart-card rv" style="--d:3">
+        <div class="chart-head">
+          <div><div class="mini-kicker" id="chartUnit">Market size, $B</div><div class="chart-t">The largest growth pools<sup class="cite" data-s="mck"></sup></div></div>
+          <div class="seg-ctl sm" id="poolCtl" role="radiogroup" aria-label="Measure">
+            <button data-m="size" class="on" role="radio">$ size</button>
+            <button data-m="mult" role="radio">Growth ×</button>
+            <button data-m="cagr" role="radio">%/yr</button>
+            <i class="seg-thumb"></i>
+          </div>
+        </div>
+        <div class="chart-legend" id="chartLegend"></div>
+        <div class="pools" id="pools"></div>
+        <div class="axis" id="poolAxis"></div>
+        <p class="chart-note" id="chartNote"></p>
+      </div>
+      <div class="capture">
+        <div class="cap-card rv" style="--d:4">
+          <div class="cap-ico" data-icon="trend"></div>
+          <div class="mini-kicker" style="color:var(--Lsix-l)">Every month</div>
+          <h3>Upper layers: telematics, data &amp; cloud</h3>
+          <p>Subscriptions and ARR, still growing: GM guides OnStar to ~$3.1B in 2026, +15%<sup class="cite" data-s="gm-q1"></sup>; Samsara’s ARR is up 30% a year<sup class="cite" data-s="samsara"></sup>.</p>
+        </div>
+        <div class="cap-card rv" style="--d:5">
+          <div class="cap-ico" data-icon="chip"></div>
+          <div class="mini-kicker" style="color:var(--Lone-l)">Once per vehicle</div>
+          <h3>Lower layers: compute &amp; platforms</h3>
+          <p>Chip prices and platform-life royalties, locked in by multi-year design wins.</p>
+        </div>
+        <div class="cap-card hl rv" style="--d:6">
+          <div class="cap-big"><span data-count="11.4" data-dec="1" data-suffix="%">11.4%</span><small>/yr</small></div>
+          <h3>Integration and V&amp;V services are the fastest-growing slice of auto software spend<sup class="cite" data-s="mck"></sup></h3>
+          <p>A different McKinsey cut from the bars: it splits spend by activity, not domain. All three of our wedges are validation work, in this slice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="incumbents" data-title="Business models" id="s-bmc">
+    <div class="stage bm" id="bm">
+      <div class="head">
+        <div class="kicker rv">Business model canvases</div>
+        <h2 class="title rv" style="--d:1">How three incumbents make money</h2>
+        <p class="sub rv" style="--d:2">Three companies at different stages of the value chain, and what each one taught us about where a student team could fit</p>
+      </div>
+      <div class="bm-grid" id="bmGrid"></div>
+      <div class="foot bm-foot" id="bmFoot"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="fit" data-title="Round 1 shortlist" id="s-ws">
+    <div class="stage ws" id="ws">
+      <div class="head">
+        <div class="kicker rv"><span class="rtag">Round 1 · 5 Oct</span> Our first shortlist</div>
+        <h2 class="title rv" style="--d:1">Round 1 picked four pockets. One survived, narrowed</h2>
+        <p class="sub rv" style="--d:2">Shortlisted on 5 Oct from the critical-and-fragmented corner. Each dot and card now shows what happened next.</p>
+      </div>
+      <div class="matrix rv" style="--d:2" id="matrix">
+        <div class="q q-ws"><div class="q-t"><span data-icon="lightbulb"></span>Engineering whitespace</div><div class="q-s">critical and fragmented: the best first wedges</div></div>
+        <div class="q q-core"><div class="q-t">Crowded core</div><div class="q-s">needs billions and years of design wins</div></div>
+        <div class="q q-unp"><div class="q-t">Unproven</div></div>
+        <div class="q q-com"><div class="q-t">Commodity</div></div>
+        <div class="ax-y">Criticality to launch, safety or approval <span>→</span></div>
+        <div class="ax-x"><span>low</span><b>Competitive intensity →</b><span>high</span></div>
+        <div class="dots" id="dots"></div>
+      </div>
+      <svg class="ws-links" id="wsLinks" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+      <div class="cands">
+        <div class="cands-k rv" style="--d:3">★ The four Round 1 picks <span>→ and what happened to each</span></div>
+        <div id="cands"></div>
+      </div>
+      <div class="foot">Placements are team judgements, not measurements. Public sources only. Our first wedge, W1, grew from a pocket that was not on this shortlist; the next two slides show why. <button type="button" class="ws-more" data-goid="s-funnel">How we scored all seven pockets →</button></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="fit" data-title="Company screen" id="s-round2">
+    <div class="stage r2" id="r2">
+      <div class="head">
+        <div class="kicker rv"><span class="rtag live">Round 2 · 26 Oct</span> Feasibility against real companies</div>
+        <h2 class="title rv" style="--d:1">Tested against real companies, 3 of 15 pairs pass</h2>
+        <p class="sub rv" style="--d:2">Our Round 1 ideas scored with each incumbent. Three pairs pass, two of them with conditions. Click a score to see why.</p>
+      </div>
+      <div class="r2-matrix rv" style="--d:3" id="r2Matrix"></div>
+      <aside class="r2-panel rv" style="--d:4" id="r2Panel" aria-live="polite"></aside>
+      <div class="foot r2-foot" id="r2Foot"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="fit" data-title="How our thinking changed" id="s-evolve">
+    <div class="stage ev" id="ev">
+      <div class="head">
+        <div class="kicker rv">How our thinking changed</div>
+        <h2 class="title rv" style="--d:1">New evidence changed our answer</h2>
+        <p class="sub rv" style="--d:2">Round 1 on the left, where each position ended up on the right. Hover or click a row to see what we learned.</p>
+      </div>
+      <button class="tog ev-walk rv" style="--d:2" id="evWalk" type="button">Walk through it</button>
+      <ol class="ev-time rv" style="--d:3" id="evTime" aria-label="Timeline"></ol>
+      <div class="ev-trace rv" style="--d:3" id="evTrace">
+        <div class="ev-colh l"><b>Round 1 · 5 Oct</b><span>market × team fit</span></div>
+        <div class="ev-colh r"><b>After Round 2 · 26 Oct</b><span>tested against real companies</span></div>
+        <svg class="ev-lines" id="evLines" viewBox="0 0 900 420" aria-hidden="true"></svg>
+        <div class="ev-from" id="evFrom" role="listbox" aria-label="Positions at Round 1"></div>
+        <div class="ev-to" id="evTo"></div>
+      </div>
+      <article class="ev-story rv" style="--d:4" id="evStory" aria-live="polite"></article>
+      <section class="ev-bottom rv" style="--d:5"><h4>Why the answer changed</h4><div id="evWhy"></div></section>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="fit" data-title="Engineering personas" id="s-people">
+    <div class="stage pe" id="pe">
+      <div class="head">
+        <div class="kicker rv">Engineering personas</div>
+        <h2 class="title rv" style="--d:1">Six people we must convince</h2>
+        <p class="sub rv" style="--d:2">Fictional archetypes of the engineers behind our wedges. Click a card for the full persona.</p>
+      </div>
+      <div class="pe-legend rv" style="--d:2" id="peLegend"></div>
+      <div class="pe-grid" id="peGrid"></div>
+      <div class="pe-ins rv" style="--d:8" id="peIns"></div>
+      <div class="foot pe-foot">Every persona is a fictional archetype built from public job postings, and every quote is imagined. Pains and motivations are hypotheses for Studio 2 interviews.</div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="wedges" data-title="Wedge hypotheses" id="s-wedges">
+    <div class="stage wedge-stage">
+      <div class="head">
+        <div class="kicker rv">Candidate wedge hypotheses</div>
+        <h2 class="title rv" style="--d:1">Three wedges, each with a test that could kill it</h2>
+        <p class="sub rv" style="--d:2">Pick a wedge on the left. Each opens on its problem, who has it, what we would offer, and the test that could kill it.</p>
+      </div>
+      <div class="wd-rail rv" style="--d:3" role="tablist" aria-label="Wedge hypotheses" aria-orientation="vertical" id="wdTabs"></div>
+      <div class="wd-panel rv" style="--d:4" role="tabpanel" id="wdPanel" tabindex="0"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="next" data-title="Outreach plan" id="s-pipeline">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Outreach pipeline · Check-In B-1.3.3</div>
+        <h2 class="title rv" style="--d:1">Who we will interview first, and how we reach them</h2>
+        <p class="sub rv" style="--d:2">Each card is one of our personas, in the order we will contact them. Names stay in our private tracker.</p>
+      </div>
+      <div class="x-panel pl-panel rv" style="--d:3" id="plBody"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="next" data-title="Innovation in society" id="s-society">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Innovation in society</div>
+        <h2 class="title rv" style="--d:1">What could go wrong for people, and what we do about it</h2>
+        <p class="sub rv" style="--d:2">Safety, security, privacy, fairness and environment, across all three wedges</p>
+      </div>
+      <div class="so-grid" id="soBody"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="next" data-title="Risks & gaps" id="s-gaps">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Our gaps</div>
+        <h2 class="title rv" style="--d:1">What could prove us wrong, and what we do about it</h2>
+        <p class="sub rv" style="--d:2">Four risks could each end a wedge. Each one has an action and a date.</p>
+      </div>
+      <div class="rg-cards" id="riskCards"></div>
+      <div class="rg-more rv" style="--d:7" id="gpBody"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="next" data-title="Questions for you" id="s-asks">
+    <div class="stage">
+      <div class="head">
+        <div class="kicker rv">Questions for reviewers</div>
+        <h2 class="title rv" style="--d:1">Where your advice would change what we do next</h2>
+        <p class="sub rv" style="--d:2">Check-In is a coaching session. These are the five questions we most want help with.</p>
+      </div>
+      <ol class="ask-list" id="askList"></ol>
+      <div class="ask-end rv" style="--d:9" id="askEnd"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="appx" data-title="Round 1 scoring" id="s-funnel">
+    <div class="stage fu" id="fu">
+      <div class="head">
+        <div class="kicker rv"><span class="rtag">Round 1 · 5 Oct</span> How Round 1 was scored</div>
+        <h2 class="title rv" style="--d:1">From seven open pockets to three targets</h2>
+        <p class="sub rv" style="--d:2">We re-scored all seven pockets, not just the four we shortlisted, so the shortlist could be overturned. Drag the weights to stress-test the ranking.</p>
+      </div>
+      <ol class="funnel rv" style="--d:3" id="funnel" aria-label="Research funnel"></ol>
+      <div class="screen-card rv" style="--d:4">
+        <div class="sc-head">
+          <div><div class="mini-kicker">Feasibility screening · draft team scores</div><div class="sc-t">Priority = team feasibility × market attractiveness</div></div>
+          <button class="tog sm" id="wReset" type="button">Reset to team weights</button>
+        </div>
+        <div class="weights" id="weights"></div>
+        <div class="ranks" id="ranks" role="list"></div>
+        <p class="sc-note" id="scNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="appx" data-title="Dossiers" id="s-dossier">
+    <div class="stage do" id="do">
+      <div class="head">
+        <div class="kicker rv">Company-screen dossiers</div>
+        <h2 class="title rv" style="--d:1">Where W1 and W2 came from</h2>
+        <p class="sub rv" style="--d:2">The detailed case for W1 and W2 from the company screen, plus the earlier targets we dropped, kept on the record</p>
+      </div>
+      <div class="do-rail rv" style="--d:3">
+        <div class="do-tabs" role="tablist" aria-label="Candidates and earlier targets" aria-orientation="vertical" id="doTabs"></div>
+        <p class="do-rail-note">No position can reach High confidence before the Studio 1 interviews. Earlier targets keep their Round 1 dossiers. W3 was added after the screen; its card is on the Wedge hypotheses slide.</p>
+      </div>
+      <div class="do-panel rv" style="--d:4" role="tabpanel" id="doPanel">
+        <div class="dp-head" id="dpHead"></div>
+        <div class="seg-ctl sm dp-views" id="dpViews" role="tablist" aria-label="Dossier sections">
+          <button data-view="case" id="ds-case" class="on" role="tab" aria-controls="dpBody">The case</button>
+          <button data-view="who" id="ds-who" role="tab" aria-controls="dpBody">Who decides</button>
+          <button data-view="evidence" id="ds-evidence" role="tab" aria-controls="dpBody">Evidence</button>
+          <button data-view="test" id="ds-test" role="tab" aria-controls="dpBody">How we test it</button>
+          <i class="seg-thumb"></i>
+        </div>
+        <div class="dp-body" id="dpBody" role="tabpanel" aria-labelledby="ds-case"></div>
+        <div class="dp-kill" id="dpKill"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-ch="appx" data-title="Evidence audit" id="s-fc">
+    <div class="stage fc" id="fc">
+      <div class="head">
+        <div class="kicker rv">Evidence audit</div>
+        <h2 class="title rv" style="--d:1">Every material claim, audited and classified</h2>
+        <p class="sub rv" style="--d:2" id="fcSub"></p>
+      </div>
+      <aside class="fc-side rv" style="--d:3">
+        <div class="fc-total"><b id="fcTotal">0</b><span>claims audited</span></div>
+        <div class="fc-split" id="fcSplit"></div>
+        <div class="fc-bar" id="fcBar"></div>
+        <div class="fc-filters" id="fcFilters"></div>
+        <div class="fc-links">
+          <a href="fact-check-report.html" target="_blank" rel="noopener">Full audit report ↗</a>
+          <a href="../interactive-v6/index.html">v6 ↗</a>
+          <a href="../interactive-v5/index.html">v5 ↗</a>
+          <a href="../interactive-v4/index.html">v4 ↗</a>
+          <a href="../interactive-v3/index.html">v3 ↗</a>
+          <a href="../interactive-v2/index.html">v2 ↗</a>
+          <a href="../interactive/index.html">v1 ↗</a>
+        </div>
+      </aside>
+      <div class="fc-main rv" style="--d:4">
+        <div class="fc-tabs seg-ctl sm" id="fcTabs" role="tablist">
+          <button data-tab="claims" class="on" role="tab" id="tab-claims" aria-controls="fcList">Claims</button>
+          <button data-tab="sources" role="tab" id="tab-sources" aria-controls="fcList">Sources</button>
+          <button data-tab="open" role="tab" id="tab-open" aria-controls="fcList">To confirm</button>
+          <button data-tab="glossary" role="tab" id="tab-glossary" aria-controls="fcList">Glossary</button>
+          <i class="seg-thumb"></i>
+        </div>
+        <div class="fc-list" id="fcList" tabindex="0" role="tabpanel" aria-labelledby="tab-claims"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Reading mode: a responsive, scrolling document built from the same data -->
+<div class="reader" id="reader" hidden></div>
+
+<!-- ============================================================ BOTTOM DOCK -->
+<nav class="dock" aria-label="Slide navigation">
+  <button class="icon-btn" id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg></button>
+  <div class="segs" id="segs"></div>
+  <button class="icon-btn" id="next" aria-label="Next slide"><svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6z"/></svg></button>
+  <span class="count" id="count"></span>
+</nav>
+
+<!-- ============================================================ OVERLAYS -->
+<div class="menu" id="menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="All slides">
+  <div class="menu-inner">
+    <div class="menu-k">All slides</div>
+    <ol id="menuList"></ol>
+    <div class="menu-ver">Versions: <b>v13</b> (this) · <a href="../interactive-v6/index.html">v6 ↗</a> · <a href="../interactive-v5/index.html">v5 ↗</a> · <a href="../interactive-v4/index.html">v4 ↗</a> · <a href="../interactive-v3/index.html">v3 ↗</a> · <a href="../interactive-v2/index.html">v2 ↗</a> · <a href="../interactive/index.html">v1 ↗</a></div>
+  </div>
+</div>
+
+<div class="finder" id="finder" aria-hidden="true">
+  <div class="finder-box" role="dialog" aria-modal="true" aria-label="Find a company">
+    <div class="finder-in">
+      <svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.2 10.4l5.4 5.4-1.4 1.4-5.4-5.4A6.5 6.5 0 1 1 9.5 3m0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>
+      <input id="finderInput" type="text" aria-label="Company name" aria-controls="finderList" placeholder="Find a company: Qualcomm, QNX, Samsara…" autocomplete="off" spellcheck="false">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="finder-list" id="finderList" role="listbox" aria-label="Matching companies"></div>
+    <div class="finder-foot"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open first role</span></div>
+  </div>
+</div>
+
+<aside class="notes" id="notes" aria-hidden="true" aria-label="Speaker notes">
+  <div class="notes-k">Speaker notes · <span id="notesSlide"></span></div>
+  <p id="notesText"></p>
+</aside>
+
+<div class="dive" id="dive" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Layer deep dive">
+  <div class="stage dive-stage" id="diveStage"></div>
+</div>
+
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script src="assets.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+/* v9: Check-In map on the cover, three wedges in the summary, wedge origins, quote labels, chip contrast */
+.cover-stats { margin-bottom: 22px; }
+.cover-map { display: flex; align-items: stretch; gap: 10px; margin-bottom: 26px; }
+.cover-map > span { align-self: center; font: 700 11.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.cover-map button { display: flex; flex-direction: column; gap: 2px; padding: 9px 14px; text-align: left; font-size: 14px; color: var(--body); background: var(--glass); border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: background .2s, border-color .2s; }
+.cover-map button:hover { background: var(--glass2); border-color: var(--gold); }
+.cover-map b { font: 700 12.5px var(--mono); color: var(--gold-l); }
+.cover-map small { font-size: 12px; color: var(--faint); }
+
+.ext-n { font-size: 17px; }
+
+.wd-orig { margin: -4px 0 12px; font-size: 13.5px; line-height: 1.4; color: var(--muted); }
+
+.pc-qtag { grid-column: 1 / -1; align-self: end; margin-top: 7px; padding-top: 6px; border-top: 1px solid var(--line); font: 700 10.5px var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--faint); }
+.pc .pc-qtag + q { margin-top: 2px; padding-top: 0; border-top: 0; }
+
+.r-map { margin: 0 0 10px; font-size: 14.5px; line-height: 1.5; color: var(--body); }
+.r-persona-q small { font-style: normal; color: var(--muted); }
+/* the reader's card tags had gold behind grey text; keep the tag readable */
+.r-cards h4 em { width: fit-content; background: rgba(245, 179, 1, .18); color: var(--ink); }
+.cover-copy { top: 104px; }
+.cover-map { margin-bottom: 22px; }
+.keys { margin-top: 18px; }
+/* risks slide: five interview steps */
+#s-next .plan { margin: 8px 0 6px; gap: 5px; }
+#s-next .plan li { padding: 5px 12px; gap: 12px; }
+#s-next .plan li > b { width: 26px; height: 26px; font-size: 13px; }
+#s-next .plan li strong { font-size: 14px; }
+#s-next .plan li small { font-size: 12.5px; }

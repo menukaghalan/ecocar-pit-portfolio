@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDV Deck Evidence Audit</title>
+<meta name="description" content="Claim-by-claim audit of the B-1.3.1 SDV value chain portfolio, 13 Oct 2026.">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root { --bg:#f8fafc; --card:#fff; --ink:#0f172a; --body:#334155; --muted:#64748b; --line:#e2e8f0; --accent:#4338ca; --head:#eef2ff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#060a18; --card:#0c1430; --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8; --line:rgba(255,255,255,.12); --accent:#a5b4fc; --head:rgba(129,140,248,.12); } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--body); font:16px/1.65 Inter, system-ui, sans-serif; }
+.top { position:sticky; top:0; background:var(--bg); border-bottom:1px solid var(--line); padding:12px 16px; display:flex; gap:16px; justify-content:space-between; font-size:14px; z-index:2; }
+.top a { color:var(--accent); }
+main { max-width:1100px; margin:0 auto; padding:24px 16px 80px; }
+h1 { font-family:'Inter Tight', Inter, sans-serif; font-size:clamp(30px,5vw,46px); line-height:1.08; letter-spacing:-.02em; color:var(--ink); }
+h2 { font-family:'Inter Tight', Inter, sans-serif; font-size:28px; color:var(--ink); margin-top:48px; padding-top:20px; border-top:1px solid var(--line); }
+h3, h4 { color:var(--ink); margin-top:28px; }
+a { color:var(--accent); word-break:break-word; }
+table { width:100%; border-collapse:collapse; font-size:14px; background:var(--card); display:block; overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+th, td { text-align:left; vertical-align:top; padding:9px 11px; border-bottom:1px solid var(--line); min-width:110px; }
+th { background:var(--head); color:var(--ink); font-size:13px; position:sticky; top:0; }
+code { font-family:'JetBrains Mono', monospace; font-size:.88em; background:var(--head); padding:1px 5px; border-radius:5px; }
+@media print { .top { display:none; } body { background:#fff; color:#111; font-size:10.5pt; } table { display:table; font-size:9pt; } th { position:static; } h2 { break-before:page; } }
+</style></head><body>
+<div class="top"><a href="index.html">← Back to the portfolio</a><span>Evidence audit · 13 Oct 2026 · source: <a href="fact-check-report.md">fact-check-report.md</a></span></div>
+<main><h1 id="nineteen-fixes-make-the-sdv-deck-safe">Nineteen fixes make the SDV deck safe</h1>
+<p>Not every claim in the interactive SDV deck holds up as of 13 October 2026, but most do. Of roughly 60 checkable statements in <code>interactive/index.html</code> and <code>interactive/data.js</code>, about two-thirds are correct as written. That includes all of the McKinsey market-sizing numbers, the QNX, Qualcomm, Mobileye, Samsara and Rivian figures, the FTC order terms, the BIS rule dates and the Upstream incident statistics. The problems fall into a few groups:</p>
+<ul>
+<li><strong>One wrong claim:</strong> China and Korea do not have "drafts". Their R155-aligned rules are already in force.</li>
+<li><strong>One stale figure:</strong> GM's $300M driver-data accrual is now <strong>$0.5B</strong>.</li>
+<li><strong>One unsourced claim:</strong> no source supports "90%+ of OEMs committed to zonal".</li>
+<li><strong>One stale logo:</strong> Airbiquity's assets were bought by Karma in February 2024.</li>
+<li><strong>About fifteen loose wordings that would fail a careful reader's check:</strong></li>
+<li>Tesla's 1.48M figure counts FSD <em>users</em>, not subscriptions.</li>
+<li>The "16% fixed OTA" figure counts vehicles <em>eligible</em> for an OTA remedy.</li>
+<li>"Software keeps 70¢" is really GM's ~70% gross margin on OnStar and Super Cruise.</li>
+<li>Ford didn't just scale back FNV4. It scrapped it.</li>
+</ul>
+<p>The deck also credits sources too loosely. Several survey and analyst figures sit next to "Source: McKinsey, January 2026" or "McKinsey Jan 2026, company filings" footers, but they actually come from:</p>
+<ul>
+<li>QNX/BlackBerry's October 2025 developer survey</li>
+<li>BizzyCar's recall tracker</li>
+<li>ABI Research forecasts</li>
+<li>S&amp;P Global Mobility</li>
+<li>a Sacra revenue estimate</li>
+</ul>
+<p>None of these is an error that sinks the deck's argument, and the four whitespace candidates still stand. But the errors are concentrated on the cover, the Why-SDVs slide and the Risks slide, where an evaluator is most likely to check. The fixes are cheap text edits in <code>data.js</code> and <code>index.html</code>. The deck's header says its text is transcribed from <code>diagrams/*.tex</code> and <code>01 Executive Summary.md</code>, so make the same edits there too.</p>
+<h2 id="at-a-glance-what-must-change-before-the-deck-is-shown">At a glance: what must change before the deck is shown</h2>
+<p>The edits fall into three tiers. Tier A items are factually wrong or out of date and must change. Tier B items are true numbers with misleading wording or the wrong source credit. Tier C items need a date stamp or label polish. Field names refer to <code>data.js</code> (L1–L8 = <code>LAYERS</code> by <code>id</code>) unless <code>index.html</code> is named.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Where</th>
+<th>Current text</th>
+<th>Change to</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>L7 <code>moats[1]</code></td>
+<td>"China, India and Korea have aligned drafts"</td>
+<td>"China (GB 44495/44496, in force Jan 2026) and Korea (CSMS, in force Aug 2025) have R155/R156-aligned rules; India's AIS-189/190 are still draft (June 2026)"</td>
+<td>China's standards are mandatory national standards (<a href="https://www.tuvsud.com/en/knowledge-hub/technical-updates/consumer-products-and-retail-essentials/china-implements-vehicle-cybersecurity-technical-requirements" target="_blank" rel="noopener">TÜV SÜD</a>). Korea's rules have applied to new types since 14 Aug 2025 (<a href="https://www.koreaherald.com/article/10660606" target="_blank" rel="noopener">Korea Herald</a>). India published only draft rules, on 27 Jun 2026 (<a href="https://www.autocarpro.in/news/india-drafts-mandatory-cybersecurity-software-update-rules-for-connected-and-autonomous-vehicles-133260" target="_blank" rel="noopener">Autocar Pro</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>L6 <code>moats[2]</code></td>
+<td>"GM accrued $300M for related litigation"</td>
+<td>"GM has accrued $0.5B for Smart Driver data investigations and litigation (10-Q, 30 Jun 2026)"</td>
+<td>$0.3B was the figure through Q3 2025. It was $0.5B at end-2025 and still $0.5B at 30 Jun 2026 (<a href="https://www.sec.gov/Archives/edgar/data/1467858/000146785826000051/gm-20260630.htm" target="_blank" rel="noopener">GM 10-Q Q2 2026</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><code>CANDIDATES[0].text</code></td>
+<td>"90%+ of OEMs are committed to zonal architecture"</td>
+<td>"Most OEMs are moving to zonal/central E/E: McKinsey expects 77% of architectures produced by 2035 to be zonal or central, up from under 30% today"</td>
+<td>No source for 90%+ was found. The closest is a vendor-cited Tier-1 survey (~96% "in some way or shape" by 2029) (<a href="https://www.designnews.com/automotive-engineering/why-cars-are-migrating-zonal-electric-architecture" target="_blank" rel="noopener">Design News</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>L4 <code>logos</code></td>
+<td>Airbiquity chip</td>
+<td>Remove; swap in Elektrobit (OTA with PlaxidityX) or Aurora Labs</td>
+<td>Karma Automotive bought Airbiquity's assets, IP, staff and contracts on 28 Feb 2024 (<a href="https://karmaautomotive.com/news/karma-automotive-acquires-assets-and-key-personnel-from-connected-vehicle-pioneer-airbiquity/" target="_blank" rel="noopener">Karma</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>L4 <code>statcap</code>; <code>SHIFTS[2].text</code></td>
+<td>"~16% of recalled US vehicles fixed over the air (Q3 2025)"; "already fixed OTA"</td>
+<td>"~15% of recalled US vehicles since 2022 (17.3M) were eligible for an OTA remedy (BizzyCar)"</td>
+<td>BizzyCar measures vehicles <em>eligible</em> for an OTA remedy. The quarterly share swings from 3% to 47% (<a href="https://bizzycar.com/blog/automotive-recall-alert-8.6-million-vehicles-recalled-in-q4-2025" target="_blank" rel="noopener">BizzyCar Q4 2025</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>L4 <code>statcap</code>; <code>index.html</code> "Cheaper recalls"</td>
+<td>"29.2M vehicles"; "About 900 US recalls"</td>
+<td>"891 US vehicle recalls covered 29.3M vehicles in 2025 (NHTSA)"</td>
+<td>NHTSA 2025 annual recall report (<a href="https://www.nhtsa.gov/sites/nhtsa.gov/files/2026-03/2025-annual-recalls-report.pdf" target="_blank" rel="noopener">NHTSA PDF, Mar 2026</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>L3 <code>winning[2]</code></td>
+<td>"Tesla: 1.48M active FSD subscriptions"</td>
+<td>"Tesla: 1.48M active FSD (Supervised) users, Q2 2026 (~45% on subscription)"</td>
+<td>The figure counts buyers and subscribers together (<a href="https://insideevs.com/news/802547/tesla-fsd-subscription-half/" target="_blank" rel="noopener">InsideEVs</a>)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><code>HUB.sdv</code>; <code>index.html</code> Risks</td>
+<td>"Ford scaled back its centralized architecture"</td>
+<td>"Ford scrapped its FNV4 zonal architecture in 2025, folding it into FNV3"</td>
+<td>Reuters, 30 Apr 2025 (<a href="https://europe.autonews.com/ford/an-ford-kills-electronics-project-0430" target="_blank" rel="noopener">Automotive News Europe</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>SHIFTS[1].text</code>; <code>index.html</code> "Recurring revenue"</td>
+<td>"software keeps about 70¢ of each dollar"</td>
+<td>"GM targets ~70% gross margins on OnStar and Super Cruise"</td>
+<td>The figure comes from GM's Q3 2025 letter and covers OnStar and Super Cruise only (<a href="https://www.repairerdrivennews.com/2025/10/23/gm-reports-double-digit-revenue-growth-from-onstar-expects-trend-to-continue/" target="_blank" rel="noopener">Repairer Driven News</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>L5 <code>statcap</code></td>
+<td>"from ~13M subscribers paying ~$20 a month"</td>
+<td>"~12M subscribers (end-2025), targeting 13M by end-2026, at ~$20 average monthly revenue per subscriber"</td>
+<td>13M is a target and $20 is an average, not a price (<a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>L8 <code>moats[1]</code>; <code>CANDIDATES[1].text</code>; <code>index.html</code> Growth pools</td>
+<td>"Integration is the top SDV challenge for 52% of engineering VPs"</td>
+<td>"52% of engineering VPs name integration complexity as a top SDV challenge (QNX, 2025)"</td>
+<td>The source is a QNX executive's byline, not McKinsey, and it says "a top challenge", not "the top challenge" (<a href="https://www.designnews.com/automotive-engineering/why-software-defined-vehicles-are-the-ultimate-test-for-automakers" target="_blank" rel="noopener">Design News, 5 Jan 2026</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>L8 <code>winning[1]</code></td>
+<td>"Applied Intuition: $15B valuation, serves 18 of the top 20 OEMs, ~$830M ARR"</td>
+<td>"Applied Intuition: $15B valuation (June 2025; ~$30B offers reported Oct 2026); says it serves 18 of the top 20 OEMs; ~$830M ARR (2025, Sacra estimate)"</td>
+<td>The company has not disclosed ARR (<a href="https://sacra.com/c/applied-intuition/" target="_blank" rel="noopener">Sacra</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>index.html</code> cover and Why-SDVs</td>
+<td>"$519B SDV software &amp; electronics"</td>
+<td>"$519B automotive software &amp; electronics by 2035"</td>
+<td>McKinsey's label is the automotive software and electronics market, in a light-vehicle base-case scenario (<a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>L4 <code>callStat</code></td>
+<td>"OTA recall fixes save US OEMs $1.5B by 2028"</td>
+<td>"OTA recall fixes could save US OEMs $1.5B by 2028 (ABI Research forecast, 2023)"</td>
+<td>It's a forecast. The layer text already says "could" but the callout drops it (<a href="https://abiresearch.com/press/by-2028-automakers-will-save-us15-billion-using-over-the-air-updates-to-fix-recalled-cars" target="_blank" rel="noopener">ABI Research</a>)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>L3 <code>statcap</code>; <code>POOLS[0].note</code></td>
+<td>"the biggest growth pool in the stack (19.4%/yr)"</td>
+<td>"the largest software growth pool: ~$9B (2025) to ~$50B (2035), nearly 20%/yr (McKinsey: 19.4%)"</td>
+<td>Rounded $9B→$50B works out to 18.7%/yr. Compute units grow faster in % terms over 2030–35</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>index.html</code> value-chain footer</td>
+<td>"Public sources only (McKinsey Jan 2026, company filings)"</td>
+<td>"Public sources: McKinsey (Jan 2026), company filings and releases, NHTSA, FTC, QNX developer survey (Oct 2025), ABI Research, BizzyCar, Upstream, S&amp;P Global Mobility"</td>
+<td>Many figures are not from McKinsey or filings</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>ACTORS</code> consumers <code>logos</code></td>
+<td>OnStar and Super Cruise chips under "Consumers"</td>
+<td>Generic "drivers / households" chip, or rename the group "Consumer-facing services"</td>
+<td>GM products are not consumers</td>
+</tr>
+<tr>
+<td>C</td>
+<td>L7 <code>moats[2]</code>; <code>REGULATORS.detail</code></td>
+<td>"hardware from 2030"</td>
+<td>"hardware from MY2030 (1 Jan 2029 for units without a model year)"</td>
+<td><a href="https://www.bis.gov/press-release/commerce-finalizes-rule-secure-connected-vehicle-supply-chains-foreign-adversary-threats" target="_blank" rel="noopener">BIS, 14 Jan 2025</a></td>
+</tr>
+<tr>
+<td>C</td>
+<td>L1 <code>winning[1]</code></td>
+<td>"Qualcomm: record $1.6B automotive quarter, +61%; Snapdragon Cockpit in 75M+ vehicles"</td>
+<td>"Qualcomm: record $1.59B auto revenue in fiscal Q3 2026 (June qtr), +61% YoY; Snapdragon Cockpit in 75M+ vehicles (as of June 2025)"</td>
+<td>Adds the quarter and the as-of date</td>
+</tr>
+</tbody>
+</table>
+<h2 id="claim-by-claim-verdicts-slide-by-slide">Claim-by-claim verdicts, slide by slide</h2>
+<p>Each table gives the deck claim, its verdict, the corrected figure, suggested replacement wording, and the best primary source available. Where the primary source was blocked, the table names the secondary source the figure was taken from.</p>
+<h3 id="cover-and-why-companies-are-betting-on-sdvs">Cover and "Why companies are betting on SDVs"</h3>
+<p>The headline McKinsey numbers are sound. The problems are a mislabelled market, a recall total that is off by 0.1M, and a margin claim that stretches GM's wording. McKinsey's 2035 report is credited as "January 2026". Search summaries and press coverage support that month, but McKinsey's own page metadata and the PDF could not be read to confirm it.</p>
+<table>
+<thead>
+<tr>
+<th>Claim (location)</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"$519B SDV software &amp; electronics by 2035" (cover, Why-SDVs)</td>
+<td>Partly correct</td>
+<td>$519B by 2035 is right, but McKinsey's market is "automotive software and electronics" (light vehicles, Current Trajectory scenario), not SDV-only</td>
+<td>"$519B automotive software &amp; electronics market by 2035 (McKinsey)"</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey, "The automotive software and electronics market through 2035"</a> (~Jan 2026)</td>
+</tr>
+<tr>
+<td>4.5%/yr vs vehicles ~1%/yr</td>
+<td>Correct</td>
+<td>"4.5 percent CAGR" vs "around 1.0 percent CAGR"</td>
+<td>Keep</td>
+<td>Same McKinsey article</td>
+</tr>
+<tr>
+<td>"Software and electronics are the only part of the car still growing fast"</td>
+<td>Unverifiable as worded</td>
+<td>McKinsey supports "growing ~4.5× faster than the vehicle market", not "the only part"</td>
+<td>"Software and electronics are growing about 4.5× faster than the vehicle market"</td>
+<td>Same McKinsey article</td>
+</tr>
+<tr>
+<td>"GM expects OnStar to pass $3B in 2026"</td>
+<td>Correct</td>
+<td>Guided $3.1B of recognized revenue, +15% YoY; "more than $3B" after Q2</td>
+<td>"GM guides ~$3.1B OnStar revenue in 2026 (+15%)"</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call, 28 Apr 2026</a>; <a href="https://gmauthority.com/blog/2026/07/gm-onstar-business-revenue-increases-20-percent-in-q2-2026/" target="_blank" rel="noopener">GM Authority, Jul 2026</a></td>
+</tr>
+<tr>
+<td>"software keeps about 70¢ of each dollar"</td>
+<td>Partly correct</td>
+<td>~70% gross margin projected for OnStar and Super Cruise only. The CFO says margins are lower once service costs are included</td>
+<td>"…and targets ~70% gross margins on OnStar and Super Cruise"</td>
+<td><a href="https://www.repairerdrivennews.com/2025/10/23/gm-reports-double-digit-revenue-growth-from-onstar-expects-trend-to-continue/" target="_blank" rel="noopener">Repairer Driven News on GM Q3 2025 letter, 23 Oct 2025</a></td>
+</tr>
+<tr>
+<td>"Rivian's Gen 2 cut ECUs from 17 to 7"</td>
+<td>Correct</td>
+<td>"from 17 ECUs to 7", plus 1.6 miles of wiring removed</td>
+<td>Keep</td>
+<td><a href="https://www.businesswire.com/news/home/20240606335706/en/Rivian-Introduces-Second-Generation-R1S-R1T" target="_blank" rel="noopener">Rivian / Business Wire, 6 Jun 2024</a></td>
+</tr>
+<tr>
+<td>"About 900 US recalls hit 29.2M vehicles in 2025"</td>
+<td>Partly correct</td>
+<td>891 vehicle recalls, 29.3M vehicles (997 recalls and 31.3M units if equipment, tires and child seats are included)</td>
+<td>"891 US vehicle recalls covered 29.3M vehicles in 2025"</td>
+<td><a href="https://www.nhtsa.gov/sites/nhtsa.gov/files/2026-03/2025-annual-recalls-report.pdf" target="_blank" rel="noopener">NHTSA 2025 Annual Report: Safety Recalls, Mar 2026</a> (read via <a href="https://www.engimarket.com/blog/vehicle-recall-statistics/" target="_blank" rel="noopener">EngiMarket</a>)</td>
+</tr>
+<tr>
+<td>"OTA fixes could save US OEMs $1.5B by 2028"</td>
+<td>Correct (forecast, dated)</td>
+<td>ABI forecast, US only. It's unclear whether the figure is annual or cumulative</td>
+<td>"…could save US OEMs $1.5B by 2028 (ABI Research, 2023)"</td>
+<td><a href="https://abiresearch.com/press/by-2028-automakers-will-save-us15-billion-using-over-the-air-updates-to-fix-recalled-cars" target="_blank" rel="noopener">ABI Research, 3 May 2023</a></td>
+</tr>
+<tr>
+<td>"Chinese rivals already run development cycles of about 18 to 24 months"</td>
+<td>Correct (minor wording)</td>
+<td>Chinese makers "routinely target" 18–24 months, about half the Western norm</td>
+<td>"Chinese rivals target 18–24-month development cycles, about half the Western norm"</td>
+<td><a href="https://autotechinsight.spglobal.com/news/5289482/the-real-meaning-of-china-speed" target="_blank" rel="noopener">S&amp;P Global Mobility AutoTechInsight, 14 Jul 2026</a></td>
+</tr>
+</tbody>
+</table>
+<p>The "$1.5B" figure also appears as the "Cheaper recalls" headline. It is a three-year-old forecast, and nothing shows that ABI has updated it. Label it as a forecast wherever it appears.</p>
+<h3 id="ecosystem-slide-actors-hub-regulators-four-shifts">Ecosystem slide (actors, hub, regulators, four shifts)</h3>
+<p>The ecosystem narrative is directionally right, but two shift texts overstate their evidence. Direct chip deals between OEMs and chipmakers are well documented. Qualcomm and BMW co-developed Snapdragon Ride Pilot (September 2025), and in July 2026 Qualcomm signed a long-term deal to supply BMW's main compute chips. No source found puts a number on how much Tier 1s are being "squeezed", and Qualcomm still partners with Bosch. Dealers losing visits is also well supported in qualitative terms, but every dollar estimate found is from 2016–2023.</p>
+<table>
+<thead>
+<tr>
+<th>Claim (location)</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chipmakers win lead-compute deals directly from OEMs (Qualcomm with BMW), "squeezing Tier 1s" (<code>semis.sdv</code>, <code>SHIFTS[0]</code>, <code>tier1.sdv</code>)</td>
+<td>Partly correct</td>
+<td>Direct deals confirmed. The squeeze isn't quantified</td>
+<td>"OEMs increasingly source central compute directly from chipmakers (BMW–Qualcomm, 2025–26), shrinking Tier 1s' share of the content"</td>
+<td><a href="https://www.thestar.com.my/tech/tech-news/2026/07/29/qualcomm-wins-bmw-chip-supply-deal-for-future-vehicle-platforms" target="_blank" rel="noopener">Reuters via The Star, 29 Jul 2026</a>; <a href="https://www.qualcomm.com/news/releases/2025/09/qualcomm-and-bmw-group-unveil-groundbreaking-automated-driving-s" target="_blank" rel="noopener">Qualcomm, 5 Sep 2025</a></td>
+</tr>
+<tr>
+<td>Platform competition is concentrating: "QNX, Google, Vector, RV Tech, Applied Intuition" (<code>swp.sdv</code>, L2 <code>critical[1]</code>)</td>
+<td>Partly correct</td>
+<td>RV Tech is a captive Rivian–VW joint venture. No evidence was found that it licenses to other OEMs</td>
+<td>"…QNX, Google, Vector and Applied Intuition, plus OEM-built platforms such as Rivian–VW's RV Tech"</td>
+<td><a href="https://www.automotiveworld.com/news/faster-leaner-more-efficient-rivian-and-volkswagen-group-announce-the-launch-of-their-joint-venture/" target="_blank" rel="noopener">Rivian–VW JV launch, Nov 2024</a></td>
+</tr>
+<tr>
+<td>"Dealers lose software-fix visits as updates move over the air" (<code>dealers.sdv</code>, <code>SHIFTS[2]</code>)</td>
+<td>Correct (qualitative)</td>
+<td>ABI: a fully OTA industry costs dealers repair revenue and foot traffic. Nearly half of ~10M software-recall vehicles still needed a dealer visit</td>
+<td>Keep. Optionally add "(ABI Research)"</td>
+<td><a href="https://www.abiresearch.com/press//abi-research-anticipates-accelerated-adoption-auto?hsLang=en" target="_blank" rel="noopener">ABI Research press release</a>; <a href="https://canadianautodealer.ca/2023/05/ota-updates-to-fix-recalled-cars-will-save-oems-1-5b/" target="_blank" rel="noopener">Canadian Auto Dealer, May 2023</a></td>
+</tr>
+<tr>
+<td>"About 16% of recalled US vehicles were already fixed OTA in Q3 2025" (<code>SHIFTS[2]</code>)</td>
+<td>Partly correct (wrong metric; one quarter is not representative)</td>
+<td>16.0% <em>eligible</em> in Q3 2025; 15% in Q4 2025; ~47% in Q1 2026; 3.1% in Q2 2026; ~15% since 2022</td>
+<td>"About 15% of recalled US vehicles since 2022 could be fixed over the air (BizzyCar)"</td>
+<td><a href="https://www.bizzycar.com/blog/automotive-recall-alert-8.5-million-vehicles-recalled-in-q3-2025" target="_blank" rel="noopener">BizzyCar Q3 2025, 14 Oct 2025</a>; <a href="https://www.bizzycar.com/blog/quarterly-recall-report-nearly-11-million-vehicles-recalled-in-q2-2026" target="_blank" rel="noopener">BizzyCar Q2 2026</a></td>
+</tr>
+<tr>
+<td>"GM expects OnStar to pass $3B in 2026" (<code>consumers.sdv</code>, <code>SHIFTS[1]</code>)</td>
+<td>Correct</td>
+<td>$3.1B guided</td>
+<td>Keep</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call</a></td>
+</tr>
+<tr>
+<td>"only about 40% of Super Cruise owners renew after the trial" (<code>consumers.sdv</code>)</td>
+<td>Correct (wording)</td>
+<td>~40% (range 30–40%) keep paying after <strong>3 years of included service</strong>. GM presents the rate as strong</td>
+<td>"about 30–40% of owners keep paying for Super Cruise after the 3 included years"</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call</a>; <a href="https://www.fool.com/earnings/call-transcripts/2026/01/27/gm-gm-q4-2025-earnings-call-transcript/" target="_blank" rel="noopener">GM Q4 2025 call, 27 Jan 2026</a></td>
+</tr>
+<tr>
+<td>"software keeps about 70 cents of each dollar" (<code>SHIFTS[1]</code>)</td>
+<td>Partly correct</td>
+<td>See Cover table</td>
+<td>See Cover table</td>
+<td>See Cover table</td>
+</tr>
+<tr>
+<td>"FTC's 2026 order … makes opt-in consent the gate for data revenue" (<code>partners.sdv</code>, <code>REGULATORS.detail</code>)</td>
+<td>Correct</td>
+<td>Final order 14 Jan 2026 (2–0 vote): affirmative express consent for 20 years; 5-year ban on sharing with consumer reporting agencies; no fine</td>
+<td>Keep</td>
+<td><a href="https://www.ftc.gov/news-events/news/press-releases/2026/01/ftc-finalizes-order-settling-allegations-gm-onstar-collected-sold-geolocation-data-without-consumers" target="_blank" rel="noopener">FTC, 14 Jan 2026</a></td>
+</tr>
+<tr>
+<td>"VW's Cariad lost €2.4B in 2023" (<code>HUB.sdv</code>)</td>
+<td>Correct</td>
+<td>€2,392M operating loss in 2023, then €2,431M in 2024</td>
+<td>Optionally: "…€2.4B in 2023 and again in 2024"</td>
+<td><a href="https://insideevs.com/news/753673/vw-group-cariad-billions-losses-2024" target="_blank" rel="noopener">InsideEVs</a>; <a href="https://marqstats.com/insights/cariad-volkswagen-software-losses-lesson/" target="_blank" rel="noopener">Marqstats</a></td>
+</tr>
+<tr>
+<td>"Ford scaled back its centralized architecture in 2025" (<code>HUB.sdv</code>)</td>
+<td>Partly correct (understated)</td>
+<td>FNV4 was cancelled and its learnings folded into FNV3</td>
+<td>"Ford scrapped its FNV4 architecture in 2025"</td>
+<td><a href="https://europe.autonews.com/ford/an-ford-kills-electronics-project-0430" target="_blank" rel="noopener">Automotive News Europe (Reuters), 30 Apr 2025</a></td>
+</tr>
+<tr>
+<td>"UN R155/R156 mandatory for new EU registrations since July 2024" (<code>REGULATORS.detail</code>)</td>
+<td>Correct</td>
+<td>New types from 6 Jul 2022; all new registrations from 7 Jul 2024</td>
+<td>Keep</td>
+<td><a href="https://unece.org/transport/documents/2021/03/standards/un-regulation-no-155-cyber-security-and-cyber-security" target="_blank" rel="noopener">UN R155</a>; <a href="https://eur-lex.europa.eu/eli/reg/2019/2144/oj" target="_blank" rel="noopener">Reg. (EU) 2019/2144</a></td>
+</tr>
+<tr>
+<td>"US Commerce rule bars Chinese/Russian connected-vehicle software from MY2027 and hardware from 2030" (<code>REGULATORS.detail</code>)</td>
+<td>Correct (add precision)</td>
+<td>Final rule 14 Jan 2025, effective 17 Mar 2025; software MY2027; hardware MY2030 (1 Jan 2029 for units without a model year); vehicles ≤10,000 lb</td>
+<td>"…software from MY2027 and hardware from MY2030"</td>
+<td><a href="https://www.bis.gov/press-release/commerce-finalizes-rule-secure-connected-vehicle-supply-chains-foreign-adversary-threats" target="_blank" rel="noopener">BIS, 14 Jan 2025</a>; <a href="https://www.federalregister.gov/documents/2025/01/16/2025-00592/securing-the-information-and-communications-technology-and-services-supply-chain-connected-vehicles" target="_blank" rel="noopener">Federal Register, 16 Jan 2025</a></td>
+</tr>
+<tr>
+<td>Regulator list: NHTSA, UNECE R155/R156, US Commerce, FTC, ISO 26262/21434 (<code>REGULATORS.list</code>)</td>
+<td>Correct</td>
+<td>The group is already titled "Regulators &amp; standards", so ISO is acceptable. "US Commerce" is more precisely BIS</td>
+<td>"US Commerce (BIS)". Optionally add China MIIT/SAMR and ISO 24089</td>
+<td><a href="https://www.bis.gov/connected-vehicles" target="_blank" rel="noopener">BIS Connected Vehicles</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="value-chain-layers-18">Value chain: layers 1–8</h3>
+<h4 id="layer-1-compute-ee">Layer 1, Compute &amp; E/E</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Central compute $5B→$17B, 2030–35 (<code>callStat</code>, <code>stat</code>)</td>
+<td>Correct</td>
+<td>McKinsey Exhibit 6: CCUs $5B→$17B (~28%/yr)</td>
+<td>Keep</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a></td>
+</tr>
+<tr>
+<td>Zonal units $4B→$13B (<code>statcap</code>)</td>
+<td>Correct</td>
+<td>ZCUs $4B→$13B (~27%/yr)</td>
+<td>Keep</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>"Qualcomm: record $1.6B automotive quarter, +61%" (<code>winning[1]</code>)</td>
+<td>Correct</td>
+<td>$1.59B in fiscal Q3 2026 (quarter ended 28 Jun 2026), +61% YoY, a record</td>
+<td>Add "(fiscal Q3 2026)"</td>
+<td><a href="https://www.qualcomm.com/news/releases/2026/07/qualcomm-announces-third-quarter-fiscal-2026-results" target="_blank" rel="noopener">Qualcomm Q3 FY26 release, Jul 2026</a>; <a href="https://futurumgroup.com/insights/qualcomm-q3-fy-2026-automotive-growth-offsets-handset-weakness/" target="_blank" rel="noopener">Futurum</a></td>
+</tr>
+<tr>
+<td>"Snapdragon Cockpit in 75M+ vehicles" (<code>winning[1]</code>)</td>
+<td>Correct (date-stamp)</td>
+<td>"more than 75 million vehicles" as of June 2025</td>
+<td>"…75M+ vehicles (June 2025)"</td>
+<td><a href="https://www.qualcomm.com/news/releases/2026/01/qualcomm-drives-the-future-of-mobility-with-strong-snapdragon-di" target="_blank" rel="noopener">Qualcomm CES 2026 release, Jan 2026</a></td>
+</tr>
+<tr>
+<td>"SDV platforms need 30–50% spare compute for future OTA features" (<code>critical[0]</code>)</td>
+<td>Partly correct (analyst opinion)</td>
+<td>One ABI analyst says "up to 30% to 50%". OEM expectations vary by segment, and premium vehicles expect more than 50%</td>
+<td>"Analysts advise 30–50% compute headroom for future OTA features (more for premium)"</td>
+<td><a href="https://www.eetasia.com/support-from-chip-partners-needed-for-sdv-success/" target="_blank" rel="noopener">EE Times Asia, ABI Research, 31 Oct 2024</a>; <a href="https://www.wardsauto.com/news/tackling-oems-dilemmas-in-software-defined-vehicle-transition/798163/" target="_blank" rel="noopener">WardsAuto/NXP survey, 10 Apr 2024</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-2-software-platforms">Layer 2, Software platforms</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"275M+ vehicles running QNX, across 45+ automakers including the top 10" (<code>stat</code>, <code>statcap</code>)</td>
+<td>Correct</td>
+<td>&gt;275M vehicles; 45+ automakers incl. the top 10 and 24 of the top 25 EV OEMs</td>
+<td>Keep</td>
+<td><a href="https://www.sec.gov/Archives/edgar/data/1070235/000107023526000039/bbry-20260228.htm" target="_blank" rel="noopener">BlackBerry FY2026 10-K (FY ended 28 Feb 2026)</a></td>
+</tr>
+<tr>
+<td>"Android Automotive powers Volvo, GM, Ford, Renault-Nissan and others" (<code>winning[1]</code>)</td>
+<td>Mostly correct</td>
+<td>Volvo/Polestar, GM and Renault are confirmed. Ford calls its Digital Experience "built with Google". Nissan shipping was not confirmed</td>
+<td>"Android Automotive powers Volvo/Polestar, GM, Renault and others; Ford's system is built with Google"</td>
+<td><a href="https://9to5google.com/2019/09/05/gm-android-automotive-2021/" target="_blank" rel="noopener">9to5Google (GM)</a>; <a href="https://abcnews4.com/news/auto-matters/renault-nissan-to-use-android-system-in-its-dashboards" target="_blank" rel="noopener">ABC News 4 (Alliance)</a>; <a href="https://fordauthority.com/2024/11/ford-digital-experience-developed-in-partnership-with-google" target="_blank" rel="noopener">Ford Authority, Nov 2024</a></td>
+</tr>
+<tr>
+<td>"OS and middleware ~$3B → ~$13B by 2035 (~16%/yr)" (<code>moats[2]</code>, <code>callStat</code>)</td>
+<td>Correct</td>
+<td>Exhibit 4: 16.2%, 2025–35; the arithmetic checks out</td>
+<td>Keep</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a></td>
+</tr>
+<tr>
+<td>"Open source (Eclipse S-CORE) pressures price" (<code>critical[2]</code>)</td>
+<td>Partly correct (analysis, not fact)</td>
+<td>S-CORE exists and is OEM-backed (BMW, Mercedes-Benz, Bosch, QNX and others). It is pre-1.0 (v0.8) and not yet in series production</td>
+<td>"OEM-backed open source (Eclipse S-CORE, v0.8, pre-production) is likely to pressure middleware pricing"</td>
+<td><a href="https://www.automotiveworld.com/news/eclipse-s-core-releases-version-0-5-alpha-for-vehicle-middleware/" target="_blank" rel="noopener">Automotive World, Nov 2025</a>; <a href="https://aeemobility.de/english-content/eclipse-s-core-v0-8-released/" target="_blank" rel="noopener">aeemobility</a></td>
+</tr>
+<tr>
+<td>Competition list incl. RV Tech and Applied Intuition (<code>critical[1]</code>)</td>
+<td>Partly correct</td>
+<td>See Ecosystem table</td>
+<td>See Ecosystem table</td>
+<td>See Ecosystem table</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-3-adas-automated-driving">Layer 3, ADAS &amp; automated driving</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"$9B → $50B in ADAS software by 2035" (<code>callStat</code>, <code>stat</code>)</td>
+<td>Correct</td>
+<td>Exhibit 4: ~$9B (2025) → ~$50B (2035)</td>
+<td>Keep, adding "(2025)" for the start year</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a></td>
+</tr>
+<tr>
+<td>"the biggest growth pool in the stack (19.4%/yr)" (<code>statcap</code>)</td>
+<td>Partly correct</td>
+<td>19.4% is McKinsey's number, but rounded $9B→$50B gives 18.7%. It is the largest <em>software</em> pool by dollar growth (+~$41B), not the fastest-growing segment in the stack (CCU/ZCU grow faster over 2030–35)</td>
+<td>"the largest software growth pool, nearly 20%/yr (McKinsey: 19.4%)"</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>"Mobileye: ~38M EyeQ chips in 2026" (<code>winning[1]</code>)</td>
+<td>Correct (date-stamp)</td>
+<td>FY26 outlook "underpinned by about 38 million EyeQ units" (Apr 2026; not restated in July)</td>
+<td>"~38M EyeQ units in FY26 outlook (Apr 2026)"</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/23/mobileye-mbly-q1-2026-earnings-transcript/" target="_blank" rel="noopener">Mobileye Q1 2026 call, 23 Apr 2026</a></td>
+</tr>
+<tr>
+<td>"Surround ADAS at $100–150 and ~70% gross margin" (<code>winning[1]</code>)</td>
+<td>Correct</td>
+<td>ASP of about $100–150, with "similar gross margins to our base ADAS volume, which is roughly 70%"</td>
+<td>Keep</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>"Tesla: 1.48M active FSD subscriptions" (<code>winning[2]</code>)</td>
+<td>Partly correct (wrong noun)</td>
+<td>1.48M active FSD (Supervised) <strong>users</strong> at Q2 2026: ~55% bought it upfront, ~45% subscribe</td>
+<td>"1.48M active FSD users (Q2 2026)"</td>
+<td><a href="https://www.notateslaapp.com/news/4483/tesla-fsd-reaches-148-million-active-subscriptions" target="_blank" rel="noopener">Not a Tesla App</a>; <a href="https://insideevs.com/news/802547/tesla-fsd-subscription-half/" target="_blank" rel="noopener">InsideEVs</a></td>
+</tr>
+<tr>
+<td>"L2 could be 52% of sales by 2030, L3 16% by 2035" (<code>moats[2]</code>)</td>
+<td>Correct (per McKinsey text)</td>
+<td>L2 52% by 2030; L3 16% by 2035 (from &lt;1% in 2025). One press write-up says 52% by 2035, so check Exhibit 1</td>
+<td>Keep</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-4-ota-software-lifecycle">Layer 4, OTA &amp; software lifecycle</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"OTA recall fixes save US OEMs $1.5B by 2028" (<code>callStat</code>)</td>
+<td>Correct only as a forecast</td>
+<td>ABI forecast, 2023</td>
+<td>"could save … (ABI Research forecast)"</td>
+<td><a href="https://abiresearch.com/press/by-2028-automakers-will-save-us15-billion-using-over-the-air-updates-to-fix-recalled-cars" target="_blank" rel="noopener">ABI Research, 3 May 2023</a></td>
+</tr>
+<tr>
+<td>"~16% of recalled US vehicles fixed over the air (Q3 2025)" (<code>stat</code>, <code>statcap</code>)</td>
+<td>Partly correct, outdated</td>
+<td>16% <em>eligible</em> in Q3 2025; ~15% since 2022</td>
+<td>"~15% of recalled US vehicles OTA-remediable since 2022"</td>
+<td><a href="https://bizzycar.com/blog/automotive-recall-alert-8.6-million-vehicles-recalled-in-q4-2025" target="_blank" rel="noopener">BizzyCar Q4 2025, 19 Jan 2026</a></td>
+</tr>
+<tr>
+<td>"29.2M vehicles were recalled in 2025" (<code>statcap</code>)</td>
+<td>Partly correct</td>
+<td>29.3M</td>
+<td>"29.3M"</td>
+<td><a href="https://www.nhtsa.gov/sites/nhtsa.gov/files/2026-03/2025-annual-recalls-report.pdf" target="_blank" rel="noopener">NHTSA, Mar 2026</a></td>
+</tr>
+<tr>
+<td>"Tesla and Rivian build in-house; Harman, Sibros and Excelfore supply everyone else" (<code>winning[1]</code>)</td>
+<td>Correct but simplified</td>
+<td>Excelfore has 20+ OEM customers; Harman OTA dates back to Red Bend. Other vendors exist</td>
+<td>"…specialists such as Harman, Sibros and Excelfore supply many others"</td>
+<td><a href="https://www.frost.com/news/press-releases/excelfore-recognized-with-frost-sullivans-2024-global-enabling-technology-leadership-award-for-its-revolutionary-ota-solutions-for-the-automotive-industry/" target="_blank" rel="noopener">Frost &amp; Sullivan (Excelfore), 2024</a>; <a href="https://car.harman.com/solutions/ota/harman-ota-over-air-solution" target="_blank" rel="noopener">Harman OTA</a></td>
+</tr>
+<tr>
+<td>"UN R156 software-update compliance" (<code>moats[1]</code>)</td>
+<td>Correct</td>
+<td>Same EU phase-in as R155</td>
+<td>Keep</td>
+<td><a href="https://unece.org/transport/documents/2021/03/standards/un-regulation-no-156-software-update-and-software-update" target="_blank" rel="noopener">UN R156</a></td>
+</tr>
+<tr>
+<td>"most recall root causes are still hardware" (<code>pain[2]</code>)</td>
+<td>Correct</td>
+<td>Software is ~20–25% of campaigns (183 of 891 in 2025 by one analysis). It is the largest single category and growing</td>
+<td>Keep, or add "though software is now the largest single category"</td>
+<td><a href="https://www.engimarket.com/blog/vehicle-recall-statistics/" target="_blank" rel="noopener">EngiMarket analysis of NHTSA data</a>; <a href="https://www.recallmasters.com/sor/" target="_blank" rel="noopener">Recall Masters</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-5-telematics-connectivity">Layer 5, Telematics &amp; connectivity</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"OnStar $3B+ in 2026" (<code>callStat</code>, <code>stat</code>)</td>
+<td>Correct</td>
+<td>$3.1B guided</td>
+<td>Keep</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call</a></td>
+</tr>
+<tr>
+<td>"from ~13M subscribers paying ~$20 a month" (<code>statcap</code>)</td>
+<td>Partly correct</td>
+<td>12M at end-2025; 13M is the end-2026 target; ~$20 is average revenue per subscriber, and many are on bundled plans</td>
+<td>"~12M subscribers, targeting 13M by end-2026, at ~$20 average monthly revenue each"</td>
+<td>Same; <a href="https://www.fool.com/earnings/call-transcripts/2026/01/27/gm-gm-q4-2025-earnings-call-transcript/" target="_blank" rel="noopener">GM Q4 2025 call</a></td>
+</tr>
+<tr>
+<td>"Samsara: $2.1B ARR, growing 30% a year" (<code>winning[1]</code>)</td>
+<td>Correct</td>
+<td>$2,124.7M ARR, +30% YoY, Q2 FY2027 (quarter ended 1 Aug 2026)</td>
+<td>Optionally add "(Aug 2026)"</td>
+<td><a href="https://secure.businesswire.com/news/home/20260903120692/en/Samsara-Reports-Second-Quarter-Fiscal-Year-2027-Financial-Results" target="_blank" rel="noopener">Samsara Q2 FY27, 3 Sep 2026</a></td>
+</tr>
+<tr>
+<td>"Samsara: 25T+ data points a year" (<code>moats[0]</code>)</td>
+<td>Correct</td>
+<td>"more than 25T data points annually"</td>
+<td>Keep</td>
+<td><a href="https://www.samsara.com/company/news/press-releases/q4-fiscal-year-2026-results" target="_blank" rel="noopener">Samsara Q4 FY26, 5 Mar 2026</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-6-data-cloud-services">Layer 6, Data &amp; cloud services</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"20 years of opt-in consent required by the FTC's January 2026 order against GM" (<code>stat</code>, <code>statcap</code>)</td>
+<td>Correct</td>
+<td>Affirmative express consent for the order's 20-year life (with exceptions such as data for first responders)</td>
+<td>Keep</td>
+<td><a href="https://www.ftc.gov/news-events/news/press-releases/2026/01/ftc-finalizes-order-settling-allegations-gm-onstar-collected-sold-geolocation-data-without-consumers" target="_blank" rel="noopener">FTC, 14 Jan 2026</a></td>
+</tr>
+<tr>
+<td>"bars GM from sharing driving data with reporting agencies for 5 years" (<code>moats[1]</code>)</td>
+<td>Correct</td>
+<td>Covers geolocation and driver-behavior data shared with <em>consumer</em> reporting agencies</td>
+<td>"…with consumer reporting agencies…"</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>"GM accrued $300M for related litigation" (<code>moats[2]</code>)</td>
+<td>Outdated</td>
+<td>$0.5B accrued (31 Dec 2025, 31 Mar and 30 Jun 2026); GM "cannot yet estimate" further loss</td>
+<td>"GM has accrued $0.5B for related investigations and litigation"</td>
+<td><a href="https://www.sec.gov/Archives/edgar/data/1467858/000146785826000051/gm-20260630.htm" target="_blank" rel="noopener">GM 10-Q Q2 2026</a>; <a href="https://www.sec.gov/Archives/edgar/data/1467858/000146785826000013/gm-20251231.htm" target="_blank" rel="noopener">GM 10-K FY2025</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-7-cybersecurity">Layer 7, Cybersecurity</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"494 public automotive cyber incidents in 2025; 92% remote, ~44% ransomware (Upstream)" (<code>stat</code>, <code>statcap</code>)</td>
+<td>Correct</td>
+<td>494; 92% remote; 44% "ransom-related", more than double 2024</td>
+<td>Optionally "~44% ransom-related"</td>
+<td><a href="https://en.prnasia.com/releases/global/ransomware-attacks-on-automotive-and-smart-mobility-more-than-doubled-in-2025-according-to-new-research-by-upstream-security-534351.shtml" target="_blank" rel="noopener">Upstream via PR Newswire, 26 May 2026</a>; <a href="https://www.wardsauto.com/news/ai-doubles-automotive-cyber-attacks-sdvs-updtream/813455/" target="_blank" rel="noopener">WardsAuto, 18 Feb 2026</a></td>
+</tr>
+<tr>
+<td>"UN R155/R156 mandatory for new EU registrations since July 2024" (<code>moats[0]</code>)</td>
+<td>Correct</td>
+<td>7 Jul 2024 for all new registrations</td>
+<td>Keep</td>
+<td><a href="https://unece.org/transport/documents/2021/03/standards/un-regulation-no-155-cyber-security-and-cyber-security" target="_blank" rel="noopener">UN R155</a></td>
+</tr>
+<tr>
+<td>"China, India and Korea have aligned drafts" (<code>moats[1]</code>)</td>
+<td><strong>Wrong</strong></td>
+<td>China: in force 1 Jan 2026 (new types). Korea: in force 14 Aug 2025 (new types). India: draft only</td>
+<td>See Tier A wording</td>
+<td><a href="https://www.tuvsud.com/en/knowledge-hub/technical-updates/consumer-products-and-retail-essentials/china-implements-vehicle-cybersecurity-technical-requirements" target="_blank" rel="noopener">TÜV SÜD</a>; <a href="https://www.koreaherald.com/article/10660606" target="_blank" rel="noopener">Korea Herald</a>; <a href="https://www.autocarpro.in/news/india-drafts-mandatory-cybersecurity-software-update-rules-for-connected-and-autonomous-vehicles-133260" target="_blank" rel="noopener">Autocar Pro, 27 Jun 2026</a></td>
+</tr>
+<tr>
+<td>"US Commerce rule bars … software from MY2027, hardware from 2030" (<code>moats[2]</code>)</td>
+<td>Correct</td>
+<td>Hardware applies from MY2030</td>
+<td>"…hardware from MY2030"</td>
+<td><a href="https://www.bis.gov/press-release/commerce-finalizes-rule-secure-connected-vehicle-supply-chains-foreign-adversary-threats" target="_blank" rel="noopener">BIS, 14 Jan 2025</a></td>
+</tr>
+<tr>
+<td>"PlaxidityX was formerly Argus Cyber Security" (<code>winning[1]</code>)</td>
+<td>Correct</td>
+<td>Renamed 15 Aug 2024; Continental subsidiary, now under Aumovio</td>
+<td>"PlaxidityX (formerly Argus; Aumovio)"</td>
+<td><a href="https://autotechinsight.spglobal.com/news/5277522/argus-cyber-security-changes-corporate-name-to-plaxidityx" target="_blank" rel="noopener">S&amp;P Global AutoTechInsight</a></td>
+</tr>
+<tr>
+<td>"42 ISO/SAE 21434 work products" (<code>pain[2]</code>)</td>
+<td>Correct per secondary sources (standard is paywalled)</td>
+<td>42</td>
+<td>Keep</td>
+<td><a href="https://www.iso.org/standard/70918.html" target="_blank" rel="noopener">ISO/SAE 21434:2021</a>; <a href="https://www.yarix.com/Workbook" target="_blank" rel="noopener">Yarix</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-8-integration-vv-tooling">Layer 8, Integration, V&amp;V &amp; tooling</h4>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"11.4%/yr, the fastest-growing SDV software service through 2035 (McKinsey)" (<code>stat</code>, <code>statcap</code>, <code>callStat</code>)</td>
+<td>Correct (loose label)</td>
+<td>"the highest CAGR of 11.4% … within software integration, verification, and validation services" (Exhibit 3, 2025–35)</td>
+<td>"11.4%/yr: the fastest-growing component of the auto software market (McKinsey)"</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a></td>
+</tr>
+<tr>
+<td>"Applied Intuition: $15B valuation, serves 18 of the top 20 OEMs, ~$830M ARR" (<code>winning[1]</code>)</td>
+<td>Partly correct / outdated</td>
+<td>$15B as of June 2025; ~$30B offers reported 13 Oct 2026, not closed. "18 of top 20" is the company's own claim. $830M ARR is a Sacra estimate</td>
+<td>See Tier B wording</td>
+<td><a href="https://www.appliedintuition.com/news/series-f" target="_blank" rel="noopener">Applied Intuition Series F, 17 Jun 2025</a>; <a href="https://sacra.com/c/applied-intuition/" target="_blank" rel="noopener">Sacra</a>; <a href="https://techstartups.com/2026/10/13/applied-intuition-receives-investment-offers-at-30-billion-valuation-doubling-its-15-billion-valuation/" target="_blank" rel="noopener">Tech Startups, 13 Oct 2026</a></td>
+</tr>
+<tr>
+<td>"Integration is the top SDV challenge for 52% of engineering VPs" (<code>moats[1]</code>)</td>
+<td>Partly correct, weakly sourced</td>
+<td>52% of VPs of Engineering name integration complexity as <em>a</em> top challenge. No VP sample size is published</td>
+<td>See Tier B wording</td>
+<td><a href="https://www.designnews.com/automotive-engineering/why-software-defined-vehicles-are-the-ultimate-test-for-automakers" target="_blank" rel="noopener">Design News (QNX's Justin Moon), 5 Jan 2026</a></td>
+</tr>
+<tr>
+<td>"Developers cite long cycles (37%) and debugging and testing (36%)" (<code>critical[0]</code>)</td>
+<td>Correct</td>
+<td>37% / 36% (integration complexity also 36%); n=1,100, vendor survey</td>
+<td>Add "(QNX survey, n=1,100)"</td>
+<td><a href="https://www.nasdaq.com/press-release/qnx-research-reveals-regulatory-pressure-and-development-bottlenecks-are-stalling-sdv" target="_blank" rel="noopener">QNX press release, 14 Oct 2025</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="growth-pools-where-the-money-grows">Growth pools ("Where the money grows")</h3>
+<p>All four bars match McKinsey. The issue is how the slide is put together. The footer credits McKinsey for everything, but the slide also carries QNX's 52% VP figure. It also shows ADAS software growing at 19.4% right beside a callout calling integration and V&amp;V the "fastest-growing software service" at 11.4%. Both numbers are McKinsey's, but they come from different exhibits that slice the market differently: Exhibit 4 splits the market by software domain, while Exhibit 3 splits it into software development, integration and V&amp;V services, power electronics and so on. A reader who sees them together will think the slide contradicts itself.</p>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADAS/AD software 9→50, "by 2035 · 19.4%/yr" (<code>POOLS[0]</code>)</td>
+<td>Correct (rounding gap)</td>
+<td>Rounded $9B→$50B over 10 years is 18.7%. 19.4% implies a 2025 base of ~$8.5B</td>
+<td>Note: "2025–35 · ~19%/yr"</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a></td>
+</tr>
+<tr>
+<td>Central compute 5→17; zonal 4→13, 2030–35 (<code>POOLS[1–2]</code>)</td>
+<td>Correct</td>
+<td>Exhibit 6</td>
+<td>Keep</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>OS &amp; middleware 3→13, ~16%/yr (<code>POOLS[3]</code>)</td>
+<td>Correct</td>
+<td>16.2%</td>
+<td>Keep</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>"OnStar alone is expected to pass $3B in 2026"</td>
+<td>Correct</td>
+<td>$3.1B</td>
+<td>Keep</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call</a></td>
+</tr>
+<tr>
+<td>"11.4%/yr Integration and V&amp;V is the fastest-growing software service"</td>
+<td>Correct, but reads as contradicting the 19.4% bar</td>
+<td>Exhibit 3 component split</td>
+<td>"11.4%/yr: integration and V&amp;V services are the fastest-growing slice of auto software spend (a different McKinsey cut from the bars above)"</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>"Integration is the top SDV challenge for 52% of engineering VPs"</td>
+<td>Partly correct; credited to the wrong source by the slide footer</td>
+<td>QNX, "a top challenge"</td>
+<td>Add "(QNX, 2025)" inline</td>
+<td><a href="https://www.designnews.com/automotive-engineering/why-software-defined-vehicles-are-the-ultimate-test-for-automakers" target="_blank" rel="noopener">Design News, 5 Jan 2026</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="whitespace-candidate-positions">Whitespace (candidate positions)</h3>
+<p>The dot placements and "open pocket" calls are labelled as team hypotheses, so this report does not fact-check them. Only the factual supports in the candidate texts are checked.</p>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"90%+ of OEMs are committed to zonal architecture" (<code>CANDIDATES[0]</code>)</td>
+<td><strong>Unverifiable</strong></td>
+<td>The closest data: ~80% fully or semi-zonal by 2026 and ~96% "in some way" by 2029 (unnamed Tier-1 survey, 2021–22). Only ~32% of OEMs expect body-zonal to be the main production architecture by 2030. McKinsey: 77% of architectures zonal/central by 2035</td>
+<td>See Tier A wording</td>
+<td><a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey 2035 article</a>; <a href="https://www.wardsauto.com/news/tackling-oems-dilemmas-in-software-defined-vehicle-transition/798163/" target="_blank" rel="noopener">WardsAuto/NXP, 10 Apr 2024</a></td>
+</tr>
+<tr>
+<td>"Integration is the top SDV challenge for 52% of engineering VPs" (<code>CANDIDATES[1]</code>)</td>
+<td>Partly correct</td>
+<td>As above</td>
+<td>As above</td>
+<td>As above</td>
+</tr>
+<tr>
+<td>"UN R155 and the US Commerce rule turn supplier provenance and patching into approval gates" (<code>CANDIDATES[3]</code>)</td>
+<td>Partly correct</td>
+<td>R155 is a type-approval gate. The BIS rule is a sale and import prohibition enforced through annual Declarations of Conformity, not an approval</td>
+<td>"…into type-approval (R155) and compliance (BIS declarations) gates"</td>
+<td><a href="https://www.mayerbrown.com/en/insights/publications/2025/01/us-commerce-department-finalizes-rule-on-connected-vehicles-with-supply-chain-links-to-china-and-russia" target="_blank" rel="noopener">Mayer Brown, Jan 2025</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="risks-and-next-steps">Risks and next steps</h3>
+<p>Every risk number on this slide is real. Two need rewording so they don't overstate the source.</p>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Verdict</th>
+<th>Corrected figure</th>
+<th>Suggested wording</th>
+<th>Best source (date)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"€2.4B lost by VW's Cariad in 2023"</td>
+<td>Correct</td>
+<td>€2,392M; €2,431M in 2024</td>
+<td>Optionally add "and again in 2024"</td>
+<td><a href="https://insideevs.com/news/753673/vw-group-cariad-billions-losses-2024" target="_blank" rel="noopener">InsideEVs</a></td>
+</tr>
+<tr>
+<td>"2025 Ford scaled back its centralized architecture"</td>
+<td>Partly correct</td>
+<td>FNV4 cancelled</td>
+<td>"2025: Ford scrapped its FNV4 zonal architecture"</td>
+<td><a href="https://europe.autonews.com/ford/an-ford-kills-electronics-project-0430" target="_blank" rel="noopener">Automotive News Europe, 30 Apr 2025</a></td>
+</tr>
+<tr>
+<td>"~40% of Super Cruise owners renew after the trial"</td>
+<td>Correct (wording)</td>
+<td>30–40% after 3 included years</td>
+<td>"~30–40% keep paying after 3 included years"</td>
+<td><a href="https://www.fool.com/earnings/call-transcripts/2026/04/28/gm-q1-2026-earnings-call-transcript/" target="_blank" rel="noopener">GM Q1 2026 call</a></td>
+</tr>
+<tr>
+<td>"The FTC's 2026 order against GM makes consent the gate for data revenue"</td>
+<td>Correct</td>
+<td>14 Jan 2026 final order</td>
+<td>Keep</td>
+<td><a href="https://www.ftc.gov/news-events/news/press-releases/2026/01/ftc-finalizes-order-settling-allegations-gm-onstar-collected-sold-geolocation-data-without-consumers" target="_blank" rel="noopener">FTC, 14 Jan 2026</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="who-plays-where-one-stale-logo-three-mislabelled-groups-five-ownership-changes">Who plays where: one stale logo, three mislabelled groups, five ownership changes</h2>
+<p>The company-to-role map is sound at its core. Every chipmaker, OS vendor and OTA specialist is in a defensible layer, and companies that span layers (Qualcomm, NVIDIA, Mobileye, Vector) are correctly shown more than once. The only hard error is <strong>Airbiquity</strong>. The rest of the changes come from a wave of 2025–26 deals that changed ownership:</p>
+<ul>
+<li><strong>Synopsys</strong> closed its ~$35B Ansys purchase on 17 Jul 2025 (<a href="https://news.synopsys.com/2025-07-17-Synopsys-Completes-Acquisition-of-Ansys" target="_blank" rel="noopener">Synopsys</a>).</li>
+<li><strong>NXP</strong> closed its $625M TTTech Auto deal in June 2025 (<a href="https://www.tttech-auto.com/newsroom/nxp-completes-acquisition-tttech-auto-accelerate-transformation-software-defined-vehicles" target="_blank" rel="noopener">TTTech Auto</a>).</li>
+<li><strong>Elektrobit and PlaxidityX</strong> moved into Aumovio, Continental's automotive spin-off, in September 2025 (<a href="https://www.elektrobit.com/about/" target="_blank" rel="noopener">Elektrobit</a>).</li>
+<li><strong>Aptiv</strong> spun its wiring business off as Versigent on 1 Apr 2026 (<a href="https://www.sec.gov/Archives/edgar/data/0001521332/000152133226000057/aptvq22026ex991.htm" target="_blank" rel="noopener">Aptiv 8-K</a>).</li>
+<li><strong>Harman</strong> agreed in December 2025 to buy ZF's ADAS business for €1.5B (<a href="https://www.brakeandfrontend.com/harman-to-acquire-zfs-adas-business/" target="_blank" rel="noopener">Brake &amp; Front End</a>). No closing announcement was found.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Group or layer</th>
+<th>Chip</th>
+<th>Verdict</th>
+<th>Fix</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L4 OTA</td>
+<td>Airbiquity</td>
+<td><strong>Wrong (stale)</strong></td>
+<td>Remove. Replace with Elektrobit or Aurora Labs</td>
+<td><a href="https://karmaautomotive.com/news/karma-automotive-acquires-assets-and-key-personnel-from-connected-vehicle-pioneer-airbiquity/" target="_blank" rel="noopener">Karma, 28 Feb 2024</a></td>
+</tr>
+<tr>
+<td>Ecosystem "Consumers"</td>
+<td>OnStar, Super Cruise</td>
+<td><strong>Mislabelled</strong></td>
+<td>Generic "drivers / households" chip, or rename the group "Consumer-facing services"</td>
+<td><a href="https://techcrunch.com/2026/01/14/the-ftcs-data-sharing-order-against-gm-is-finally-settled" target="_blank" rel="noopener">TechCrunch, 14 Jan 2026</a></td>
+</tr>
+<tr>
+<td>Ecosystem "SDV specialists"</td>
+<td>Harman</td>
+<td>Weak</td>
+<td>Harman is a Samsung-owned Tier 1 buying ZF ADAS. Swap for Sibros or Excelfore</td>
+<td><a href="https://www.brakeandfrontend.com/harman-to-acquire-zfs-adas-business/" target="_blank" rel="noopener">Brake &amp; Front End</a>; <a href="https://excelfore.com" target="_blank" rel="noopener">Excelfore</a></td>
+</tr>
+<tr>
+<td>Ecosystem "Data partners"</td>
+<td>Motive, Samsara</td>
+<td>Weak (duplicates telematics)</td>
+<td>Keep one telematics chip and add an insurance chip, or drop "insurance" from the sub-label</td>
+<td><a href="https://www.freightwaves.com/news/motive-files-for-ipo-signaling-next-phase-of-fleet-tech-arms-race" target="_blank" rel="noopener">FreightWaves</a></td>
+</tr>
+<tr>
+<td>L2 platforms, ecosystem text</td>
+<td>RV Tech</td>
+<td>Weak</td>
+<td>Label it "OEM-built platform (Rivian–VW JV)", not a merchant competitor</td>
+<td><a href="https://www.automotiveworld.com/news/rivian-and-volkswagen-joint-venture-reaches-1500-employees/" target="_blank" rel="noopener">Automotive World (1,500 staff)</a></td>
+</tr>
+<tr>
+<td>L2 platforms</td>
+<td>Elektrobit</td>
+<td>OK</td>
+<td>Caption "Elektrobit (Aumovio)"</td>
+<td><a href="https://en.wikipedia.org/wiki/Aumovio_SE" target="_blank" rel="noopener">Wikipedia: Aumovio</a></td>
+</tr>
+<tr>
+<td>L7 cyber</td>
+<td>PlaxidityX</td>
+<td>OK</td>
+<td>Caption "PlaxidityX (Aumovio)"</td>
+<td><a href="https://www.elektrobit.com/about/" target="_blank" rel="noopener">Elektrobit about</a></td>
+</tr>
+<tr>
+<td>L7 cyber</td>
+<td>VicOne</td>
+<td>OK</td>
+<td>Caption "VicOne (Trend Micro)"</td>
+<td><a href="https://vicone.com/why-vicone/" target="_blank" rel="noopener">VicOne</a></td>
+</tr>
+<tr>
+<td>L7 cyber</td>
+<td>Karamba</td>
+<td>Weak</td>
+<td>Independent but has had no 2025–26 news. Consider Cybellum or ETAS</td>
+<td><a href="https://autotechinsight.spglobal.com/news/5271618/karamba-securitys-xguard-host-idps-software-reaches-3-million-deployments" target="_blank" rel="noopener">S&amp;P AutoTechInsight</a></td>
+</tr>
+<tr>
+<td>L8 V&amp;V</td>
+<td>Synopsys</td>
+<td>OK, stronger</td>
+<td>Caption "Synopsys (incl. Ansys)"</td>
+<td><a href="https://news.synopsys.com/2025-07-17-Synopsys-Completes-Acquisition-of-Ansys" target="_blank" rel="noopener">Synopsys, 17 Jul 2025</a></td>
+</tr>
+<tr>
+<td>L1 compute</td>
+<td>NXP</td>
+<td>OK</td>
+<td>Optionally note TTTech/MotionWise (also a software-layer player)</td>
+<td><a href="https://www.tttech-auto.com/newsroom/nxp-completes-acquisition-tttech-auto-accelerate-transformation-software-defined-vehicles" target="_blank" rel="noopener">TTTech Auto</a></td>
+</tr>
+<tr>
+<td>L1 compute, ecosystem Tier 1</td>
+<td>Aptiv</td>
+<td>OK</td>
+<td>Wiring now sits in Versigent; Aptiv keeps Wind River</td>
+<td><a href="https://www.sec.gov/Archives/edgar/data/0001521332/000152133226000057/aptvq22026ex991.htm" target="_blank" rel="noopener">Aptiv 8-K Q2 2026</a></td>
+</tr>
+<tr>
+<td>L1 compute</td>
+<td>Bosch</td>
+<td>Weak-OK</td>
+<td>The only non-chipmaker in a chip-heavy row. Fine under "E/E"</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Ecosystem Tier 1</td>
+<td>ZF</td>
+<td>OK (pending change)</td>
+<td>ADAS unit being sold to Harman</td>
+<td><a href="https://www.brakeandfrontend.com/harman-to-acquire-zfs-adas-business/" target="_blank" rel="noopener">Brake &amp; Front End</a></td>
+</tr>
+<tr>
+<td>Ecosystem "Fleet operators"</td>
+<td>Uber, Lyft</td>
+<td>Weak-OK</td>
+<td>Caption "ride-hail / robotaxi fleets". Hertz is the only true owner-operator</td>
+<td><a href="https://techcrunch.com/2025/07/17/uber-makes-multi-million-dollar-investment-in-lucid-nuro-to-build-robotaxi-service" target="_blank" rel="noopener">TechCrunch (Uber–Lucid–Nuro), 17 Jul 2025</a>; <a href="https://www.lyft.com/blog/posts/lyft-and-waymo-launch-partnership-to-expand-autonomous-mobility-to-nashville" target="_blank" rel="noopener">Lyft–Waymo</a></td>
+</tr>
+<tr>
+<td>L3 ADAS</td>
+<td>(missing)</td>
+<td>Optional</td>
+<td>Add Waymo as the leading L4 operator</td>
+<td><a href="https://www.lyft.com/blog/posts/lyft-and-waymo-launch-partnership-to-expand-autonomous-mobility-to-nashville" target="_blank" rel="noopener">Lyft–Waymo</a></td>
+</tr>
+<tr>
+<td>L3 ADAS</td>
+<td>NVIDIA, Qualcomm</td>
+<td>OK</td>
+<td>NVIDIA DRIVE AV in the Mercedes CLA; Snapdragon Ride Pilot in the BMW iX3</td>
+<td><a href="https://blogs.nvidia.com/blog/drive-av-software-mercedes-benz-cla/" target="_blank" rel="noopener">NVIDIA blog</a>; <a href="https://www.qualcomm.com/news/releases/2025/09/qualcomm-and-bmw-group-unveil-groundbreaking-automated-driving-s" target="_blank" rel="noopener">Qualcomm, 5 Sep 2025</a></td>
+</tr>
+<tr>
+<td>L2 platforms</td>
+<td>QNX, Vector, Wind River, Android Automotive</td>
+<td>OK</td>
+<td>No change. Wind River is still an Aptiv subsidiary</td>
+<td><a href="https://www.sec.gov/Archives/edgar/data/1070235/000107023526000039/bbry-20260228.htm" target="_blank" rel="noopener">BlackBerry 10-K</a></td>
+</tr>
+<tr>
+<td>L4, L5</td>
+<td>Excelfore, Harman (OTA), Motive, Samsara, OnStar</td>
+<td>OK</td>
+<td>Excelfore is active. Motive filed for an IPO in December 2025</td>
+<td><a href="https://www.freightwaves.com/news/motive-files-for-ipo-signaling-next-phase-of-fleet-tech-arms-race" target="_blank" rel="noopener">FreightWaves</a></td>
+</tr>
+</tbody>
+</table>
+<p>Some roles were taken from homepages and not re-checked against 2025–26 evidence: Mobileye, Infineon, Renesas, Sibros, Upstream, dSPACE, Applied Intuition's layer placement, TomTom, HERE, AT&amp;T, Verizon, the hyperscalers and the OEM hub brands. They are long-standing and very likely still right, but this pass did not rule out recent changes.</p>
+<h2 id="source-attributions-credit-qnx-bizzycar-abi-and-sacra-not-mckinsey">Source attributions: credit QNX, BizzyCar, ABI and Sacra, not McKinsey</h2>
+<p>McKinsey's 2035 report contains only the market-sizing figures: $519B, 4.5% vs 1%, the CCU, ZCU, ADAS and OS pools, 11.4%, and L2 52% / L3 16%. It does not mention compute headroom, Chinese development cycles or any "90% committed to zonal" figure (<a href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/mapping-the-automotive-software-and-electronics-landscape" target="_blank" rel="noopener">McKinsey</a>). The deck seldom names a wrong source in a claim itself. The misattribution comes from two catch-all footers, "Public sources only (McKinsey Jan 2026, company filings)" on the value-chain slide and "Source: McKinsey, January 2026" on the growth-pools slide, which a reader will take to cover every number nearby. The table below gives the correct credit for each figure that is not McKinsey's.</p>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>Where in deck</th>
+<th>Correct credit</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>52% of engineering VPs; 37% / 36% developer pain points</td>
+<td>L8, Growth pools, Whitespace #2</td>
+<td>QNX (BlackBerry), <em>Under the Hood: SDV Developer Report</em>, Oct 2025, n=1,100 (<a href="https://www.nasdaq.com/press-release/qnx-research-reveals-regulatory-pressure-and-development-bottlenecks-are-stalling-sdv" target="_blank" rel="noopener">press release</a>)</td>
+<td>Vendor survey. The 52% comes from a QNX executive's byline, not the release</td>
+</tr>
+<tr>
+<td>30–50% compute headroom</td>
+<td>L1</td>
+<td>James Hodgson, ABI Research (<a href="https://www.eetasia.com/support-from-chip-partners-needed-for-sdv-success/" target="_blank" rel="noopener">EE Times Asia, 31 Oct 2024</a>)</td>
+<td>One analyst's opinion, not a standard</td>
+</tr>
+<tr>
+<td>18–24-month Chinese cycles</td>
+<td>Why SDVs</td>
+<td>S&amp;P Global Mobility AutoTechInsight (<a href="https://autotechinsight.spglobal.com/news/5289482/the-real-meaning-of-china-speed" target="_blank" rel="noopener">14 Jul 2026</a>)</td>
+<td>McKinsey's separate product-development work says ~24 months</td>
+</tr>
+<tr>
+<td>~16% OTA share</td>
+<td>L4, Shift 3</td>
+<td>BizzyCar, from NHTSA data (<a href="https://www.bizzycar.com/blog/automotive-recall-alert-8.5-million-vehicles-recalled-in-q3-2025" target="_blank" rel="noopener">Q3 2025</a>)</td>
+<td>Not an NHTSA statistic</td>
+</tr>
+<tr>
+<td>$1.5B OTA savings by 2028</td>
+<td>Why SDVs, L4</td>
+<td>ABI Research forecast (<a href="https://abiresearch.com/press/by-2028-automakers-will-save-us15-billion-using-over-the-air-updates-to-fix-recalled-cars" target="_blank" rel="noopener">3 May 2023</a>)</td>
+<td>Forecast, US only</td>
+</tr>
+<tr>
+<td>~$830M Applied Intuition ARR</td>
+<td>L8</td>
+<td>Sacra estimate (<a href="https://sacra.com/c/applied-intuition/" target="_blank" rel="noopener">Sacra</a>)</td>
+<td>Not disclosed by the company</td>
+</tr>
+<tr>
+<td>"70¢ of each dollar"</td>
+<td>Why SDVs, Shift 2</td>
+<td>Media shorthand for GM's "gross margins of approximately 70%" on OnStar and Super Cruise (<a href="https://www.repairerdrivennews.com/2025/10/23/gm-reports-double-digit-revenue-growth-from-onstar-expects-trend-to-continue/" target="_blank" rel="noopener">RDN</a>)</td>
+<td>Attribute to GM, Q3 2025 shareholder letter</td>
+</tr>
+<tr>
+<td>90%+ committed to zonal</td>
+<td>Whitespace #1</td>
+<td>No source found</td>
+<td>Replace with McKinsey's 77%-by-2035 figure</td>
+</tr>
+<tr>
+<td>494 / 92% / 44%</td>
+<td>L7</td>
+<td>Upstream Security, 2026 report (<a href="https://en.prnasia.com/releases/global/ransomware-attacks-on-automotive-and-smart-mobility-more-than-doubled-in-2025-according-to-new-research-by-upstream-security-534351.shtml" target="_blank" rel="noopener">PR Newswire</a>)</td>
+<td>Already credited correctly</td>
+</tr>
+<tr>
+<td>11.4% integration and V&amp;V</td>
+<td>L8</td>
+<td>McKinsey, Exhibit 3</td>
+<td>Already credited correctly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="open-items-a-human-still-needs-to-confirm">Open items a human still needs to confirm</h2>
+<p>Several figures rest on secondary quotations because the primary pages returned HTTP 403, were paywalled or would not download. Five scheduled releases also land within weeks of this check and could make the deck's latest-quarter figures stale before it is shown. Neither group is likely to change a verdict, but whoever signs off on the deck should clear them.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>What to check</th>
+<th>Where</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>McKinsey 2035 PDF</td>
+<td>(a) The publication month really is January 2026. (b) Whether Exhibit 1 shows L2 at 52% in 2030 or 2035. (c) The unrounded 2025 ADAS base (~$8.5B?). (d) The Exhibit 3 $294B→$469B / 4.1% mismatch</td>
+<td><a href="https://www.mckinsey.com/~/media/mckinsey/features/mckinsey%20center%20for%20future%20mobility/our%20insights/mapping%20the%20automotive%20software%20and%20electronics%20landscape/2025/the-automotive-software-and-electronics-market-through-2035.pdf" target="_blank" rel="noopener">McKinsey PDF</a> (blocked to automated fetch)</td>
+<td>Cover attribution date; L3 <code>moats[2]</code>; the 19.4% rounding</td>
+</tr>
+<tr>
+<td>NHTSA 2025 recall report</td>
+<td>The exact "891 recalls / 29.3M vehicles" wording, and whether Tesla is missing from the list of OTA remedy makers</td>
+<td><a href="https://www.nhtsa.gov/sites/nhtsa.gov/files/2026-03/2025-annual-recalls-report.pdf" target="_blank" rel="noopener">NHTSA PDF</a> (403)</td>
+<td>Why-SDVs and L4 figures</td>
+</tr>
+<tr>
+<td>QNX report PDF</td>
+<td>The VP sub-sample size behind the 52%, the research firm and the fieldwork dates</td>
+<td><a href="https://blackberry.qnx.com/content/dam/blackberry-qnx-com/en/industries/automotive/reports/under-the-hood-sdv-developer-report-oct-2025-v1.2.pdf" target="_blank" rel="noopener">QNX PDF</a> (redirects)</td>
+<td>Whether to keep the 52% at all</td>
+</tr>
+<tr>
+<td>GM primary letters</td>
+<td>Q3 2025 letter (exact "~70%" wording); Q2 2026 letter (whether the $3.1B guidance was reaffirmed); Q4 2025 deck (Super Cruise subscribers: 620k or 120k)</td>
+<td><a href="https://generalmotorscompany.gcs-web.com/news-releases/news-release-details/q2-2026-letter-shareholders" target="_blank" rel="noopener">GM IR Q2 2026 letter</a> (403)</td>
+<td>Recurring-revenue tile, L5</td>
+</tr>
+<tr>
+<td>GM Q1/Q2 2026 10-Q accrual text</td>
+<td>That the $0.5B accrual wording is verbatim (it came from search excerpts)</td>
+<td><a href="https://www.sec.gov/Archives/edgar/data/1467858/000146785826000051/gm-20260630.htm" target="_blank" rel="noopener">GM 10-Q Q2 2026</a></td>
+<td>L6 replacement figure</td>
+</tr>
+<tr>
+<td>Qualcomm and Tesla primary releases</td>
+<td>The $1.59B "record" wording in Qualcomm's release body; the 1.48M figure and the purchase/subscription split in Tesla's Q2 2026 Update</td>
+<td><a href="https://www.qualcomm.com/news/releases/2026/07/qualcomm-announces-third-quarter-fiscal-2026-results" target="_blank" rel="noopener">Qualcomm Q3 FY26</a></td>
+<td>L1, L3</td>
+</tr>
+<tr>
+<td>ISO/SAE 21434</td>
+<td>The 42 work-product count against the standard, and whether a revised edition has been published</td>
+<td><a href="https://www.iso.org/standard/70918.html" target="_blank" rel="noopener">ISO</a> (paywalled)</td>
+<td>L7 <code>pain[2]</code></td>
+</tr>
+<tr>
+<td>China GB 44495 Amendment XG1-2026 and India AIS-189/190</td>
+<td>China's existing-type deadline (2027 or 2028) and the amendment's dates; whether India has gazetted final rules since the June 2026 draft</td>
+<td><a href="https://www.codeofchina.com/standard/GB44495-2024.html" target="_blank" rel="noopener">Code of China</a>; <a href="https://www.autocarpro.in/news/india-drafts-mandatory-cybersecurity-software-update-rules-for-connected-and-autonomous-vehicles-133260" target="_blank" rel="noopener">Autocar Pro</a></td>
+<td>L7 <code>moats[1]</code> replacement wording</td>
+</tr>
+<tr>
+<td>Pending deals</td>
+<td>Whether the Harman–ZF ADAS deal has closed; whether Applied Intuition's ~$30B round has closed; Motive's IPO status</td>
+<td><a href="https://techstartups.com/2026/10/13/applied-intuition-receives-investment-offers-at-30-billion-valuation-doubling-its-15-billion-valuation/" target="_blank" rel="noopener">Tech Startups, 13 Oct 2026</a></td>
+<td>L8 valuation; Tier 1 and specialist captions</td>
+</tr>
+<tr>
+<td>Upcoming releases</td>
+<td>Tesla Q3 2026 and GM Q3 2026 (late Oct); Qualcomm fiscal Q4 2026 (early Nov, guided ~+60% auto); Samsara Q3 FY27 (early Dec); BizzyCar Q3 2026 (mid-Oct)</td>
+<td>Company IR pages</td>
+<td>Refresh L1, L3, L5 and the OnStar figures if the deck is shown after these dates</td>
+</tr>
+<tr>
+<td>Minor primaries not fetched</td>
+<td>VW Annual Report 2023 (Cariad); a Ford statement on FNV4; whether Nissan currently ships AAOS</td>
+<td>n/a</td>
+<td>Low risk; secondary sources agree</td>
+</tr>
+</tbody>
+</table>
+<h2 id="conclusion">Conclusion</h2>
+<p>The deck's errors share a pattern: true numbers with their conditions stripped off. "Eligible for OTA" turned into "fixed OTA", "users" turned into "subscriptions", "a target of 13M" turned into "13M subscribers", "a top challenge" turned into "the top challenge", "draft" stayed in place after the rules came into force, and a 2023 forecast reads as an outcome. Each one is a small step, but every step makes the SDV case look stronger than its sources do. A sceptical evaluator who catches two of them will start doubting the rest. Restoring the conditions costs a few words per claim and leaves the four whitespace candidates fully intact.</p>
+<p>Two fixes go further than accuracy. The data partly undercuts the zonal-migration candidate's "90%+" premise: only about a third of OEMs expect body-zonal to be their main production architecture by 2030. That argues for pitching zonal migration as a long transition with many years of mixed fleets, which is arguably a better market for a legacy-ECU porting service than a finished switchover. And once the 52% VP figure is properly credited, the V&amp;V candidate rests on a vendor survey with no published sample size. The team should back it with its own SME interviews, as the deck's next-steps slide already plans, rather than lean on that statistic.</p></main></body></html>
